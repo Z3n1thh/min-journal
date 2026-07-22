@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="sv" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#fb7185" id="metaThemeColor">
+<meta name="description" content="Min personliga välmående-journal för att logga humör, vanor och tacksamhet.">
+<!-- Inbäddat PWA Manifest -->
+<link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Min%20V%C3%A4lm%C3%A5ende-Journal%22%2C%22short_name%22%3A%22Journal%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%2309070c%22%2C%22theme_color%22%3A%22%23fb7185%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%253E%253Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2750%27%20fill%3D%27%2523fb7185%27%2F%253E%253Ctext%20x%3D%2750%27%20y%3D%2768%27%20font-size%3D%2745%27%20font-family%3D%27sans-serif%27%20font-weight%3D%27bold%27%20text-anchor%3D%27middle%27%20fill%3D%27%2523fff%27%253EJ%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22192x192%20512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23fb7185'/%3E%3Ctext x='50' y='68' font-size='45' font-family='sans-serif' font-weight='bold' text-anchor='middle' fill='%23fff'%3EJ%3C/text%3E%3C/svg%3E">
+<title>Min Välmående-Journal</title>
+<style>
+/* Färgteman - Standard variabler, styrs sedan av slidern i JS */
+:root {
+  --bg:#09070c; --bg-elevated:#131018; --bg-card:#181421; --bg-input:#221b2e;
+  --ink:#ffffff; --ink-secondary:#ebd6fb; --ink-muted:#b89ecc;
+  --border:#352847; --border-hover:#523f6d;
+  
+  --accent:#fb7185; 
+  --accent-glow:rgba(251,113,133,0.18);
+  --accent-text:#ffffff; 
+  
+  --radius-sm:10px; --radius-md:14px; --radius-lg:20px;
+  --font:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,sans-serif;
+}
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Reset & Grundinställningar */
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+
+/* Mjuka färgövergångar globalt */
+html, body {
+  font-family:var(--font); background:var(--bg); color:var(--ink);
+  height:100dvh; width:100vw; overflow:hidden; line-height:1.6; font-size:16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::-webkit-scrollbar { width: 0px; height: 0px; background: transparent; }
+* { -ms-overflow-style: none; scrollbar-width: none; }
+body{display:flex;align-items:center;justify-content:center;}
+button { font-family: inherit; color: inherit; transition: background-color 0.2s, color 0.2s, border-color 0.2s; }
+
+/* APP-SKELETT: Flexbox-layout */
+.app{
+  width:100%; height:100dvh; max-width:100%;
+  display:flex; flex-direction:column; background:var(--bg); position:relative; overflow:hidden;
+  transition: background-color 0.3s ease;
+}
+
+@media(min-width:600px){
+  body { padding: 2vh 20px; background: #050308; }
+  .app{
+    max-width:480px; height:96vh; max-height:900px;
+    border-radius:var(--radius-lg); border:1px solid var(--border); box-shadow:0 20px 60px rgba(0,0,0,0.9);
+  }
+}
+
+/* Header */
+.header{flex-shrink:0; background:var(--bg); border-bottom:1px solid var(--border); padding:12px 16px; transition: background-color 0.3s ease, border-color 0.3s ease;}
+.header-top{display:flex; justify-content:space-between; align-items:center; width:100%;}
+.logo{font-size:1.2rem; font-weight:800; letter-spacing:-0.5px; background:linear-gradient(135deg,var(--accent),#e879f9); -webkit-background-clip:text; -webkit-text-fill-color:transparent; cursor:pointer;}
+.header-actions{display:flex; gap:6px; align-items:center;}
+.icon-btn{width:38px; height:38px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-card); color:var(--ink-secondary); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1.1rem; transition: background-color 0.3s ease, border-color 0.3s ease;}
+.icon-btn:hover{border-color:var(--accent); color:var(--ink); background:var(--bg-input);}
+.icon-btn.primary{background:linear-gradient(135deg,var(--accent),#e879f9); border:none; color:var(--accent-text) !important;}
+
+.nav-pills{display:flex; gap:6px; padding:8px 0 0; width:100%; align-items:center; justify-content:center;}
+.pill{padding:6px 14px; border-radius:12px; border:1px solid var(--border); background:var(--bg-card); color:var(--ink-secondary); font-size:0.85rem; font-weight:600; cursor:pointer; white-space:nowrap; transition: background-color 0.3s ease, border-color 0.3s ease;}
+.pill.active{background:var(--accent); color:var(--accent-text); border-color:transparent;}
+.date-jump-input{background:var(--bg-input); border:1px solid var(--border); color:var(--ink); padding:4px 10px; border-radius:10px; font-size:0.85rem; font-family:inherit; cursor:pointer; outline:none; transition: all 0.3s ease;}
+
+/* Innehållsyta */
+.view-section{ display:none; flex:1; flex-direction:column; overflow-y:auto; padding:12px 16px 20px 16px; align-items:stretch; gap:12px; -webkit-overflow-scrolling:touch; }
+.view-section.active{display:flex;}
+
+/* Väder & Banners */
+.weather-bar{display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); font-size:0.9rem; cursor:pointer; flex-shrink:0; transition: background-color 0.3s ease, border-color 0.3s ease;}
+.weather-info{flex:1; overflow:hidden;}
+.weather-temp{font-weight:700; color:var(--ink); font-size:0.95rem; transition: color 0.3s ease;}
+.weather-desc{color:var(--ink-muted); font-size:0.8rem; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; transition: color 0.3s ease;}
+
+.gentle-banner{background:linear-gradient(135deg,rgba(251,113,133,0.08),rgba(232,121,249,0.08)); border:1px solid rgba(251,113,133,0.25); border-radius:var(--radius-sm); padding:10px 14px; display:flex; align-items:center; gap:10px; cursor:pointer; font-size:0.9rem; flex-shrink:0;}
+.gentle-banner.hidden{display:none;}
+
+/* Kalendergrid */
+.cal-weekdays{display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-size:0.85rem; font-weight:700; color:var(--ink-muted); padding-bottom:4px; flex-shrink:0; transition: color 0.3s ease;}
+.cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; flex-shrink:0;}
+.cal-day{aspect-ratio:1/1; min-height:0; border-radius:var(--radius-sm); padding:4px; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--bg-card); border:1px solid var(--border); position:relative; overflow:hidden; transition: background-color 0.2s, border-color 0.2s;}
+.cal-day:hover{border-color:var(--accent); background:var(--bg-input);}
+.cal-day.other-month{opacity:.25;}
+.cal-day.today{border-color:var(--accent); background:var(--accent-glow);}
+.cal-day.has-entry{background:var(--bg-input); border-color:var(--border-hover);}
+.cal-num{font-size:clamp(0.9rem, 3.5vw, 1.1rem); font-weight:700;}
+.cal-mood-line{position:absolute; bottom:0; left:0; height:4px; width:100%;}
+
+/* Generella UI element */
+.dashboard-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: var(--radius-sm); border: 1px solid var(--border); overflow: hidden; flex-shrink:0; transition: background-color 0.3s ease, border-color 0.3s ease; }
+.dashboard-table td { padding: 10px 14px; font-size: 0.9rem; border-bottom: 1px solid var(--border); transition: border-color 0.3s ease; }
+.dashboard-table tr:last-child td { border-bottom: none; }
+
+.affirmation-card{background:linear-gradient(135deg,var(--bg-card),var(--bg-input)); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px; text-align:center; font-size:0.95rem; color:var(--ink-secondary); font-weight:500; cursor:pointer; flex-shrink:0; transition: border-color 0.2s, color 0.3s ease;}
+.affirmation-card:hover{border-color:var(--accent); color:var(--ink);}
+
+.activity-banner { background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: var(--radius-sm); padding: 12px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background-color 0.3s ease, border-color 0.3s ease; flex-shrink: 0; }
+.activity-banner:hover { background: var(--bg-input); }
+
+.memory-card{background:linear-gradient(135deg,var(--bg-card),var(--bg-input)); border:1px dashed var(--accent); border-radius:var(--radius-sm); padding:10px 14px; display:flex; flex-direction:column; gap:4px; cursor:pointer; transition: background-color 0.3s ease;}
+
+.search-container{display:flex; gap:8px; flex-shrink:0;}
+.search-input{flex:1; padding:12px 16px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-card); color:var(--ink); font-size:16px; outline:none; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.1s ease;}
+.search-input:focus{border-color:var(--accent);}
+
+.scrapbook-container, .books-container{display:flex; flex-direction:column; gap:12px;}
+.scrapbook-card, .book-card{background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; display:flex; flex-direction:column; gap:8px; transition: background-color 0.3s ease, border-color 0.3s ease;}
+
+.pixels-container{display:flex; flex-direction:column; gap:10px;}
+.pixel-month-card{background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px; display:flex; flex-direction:column; gap:8px; transition: background-color 0.3s ease, border-color 0.3s ease;}
+.pixel-month-header{font-size:0.95rem; font-weight:bold; color:var(--accent);}
+.pixel-grid-month{display:grid; grid-template-columns: repeat(auto-fill, minmax(24px, 1fr)); gap:5px;}
+.pixel-cell{aspect-ratio:1/1; border-radius:4px; background:var(--bg-input); border:1px solid var(--border); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.75rem; color:var(--ink); font-weight:700;}
+.pixel-legend{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:8px; font-size:0.85rem; color:var(--ink-secondary); background:var(--bg-card); padding:10px; border-radius:var(--radius-sm); border:1px solid var(--border); font-weight:500; transition: background-color 0.3s ease, border-color 0.3s ease;}
+.legend-item{display:flex; align-items:center; gap:5px;}
+.legend-dot{width:12px; height:12px; border-radius:50%;}
+
+.gallery-container{display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:10px;}
+.gallery-item{aspect-ratio:1/1; border-radius:var(--radius-sm); overflow:hidden; background:var(--bg-card); border:1px solid var(--border); cursor:pointer; position:relative; transition: background-color 0.3s ease, border-color 0.3s ease;}
+.gallery-item img{width:100%; height:100%; object-fit:cover;}
+
+/* Modal System - Responsiva och färg-mjuka */
+.modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.85); display:none; align-items:center; justify-content:center; z-index:1000; padding:14px;}
+.modal-overlay.active{display:flex;}
+.modal-sheet{background:var(--bg-elevated); border-radius:var(--radius-lg); padding:24px; width:100%; max-width:480px; max-height:85vh; overflow-y:auto; border:1px solid var(--border); -webkit-overflow-scrolling:touch; transition: background-color 0.3s ease, border-color 0.3s ease;}
+.section-label{font-size:0.85rem; font-weight:700; color:var(--ink-secondary); text-transform:uppercase; margin:20px 0 8px 0; letter-spacing:1px; transition: color 0.3s ease;}
+
+.mood-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+.mood-card{border-radius:var(--radius-sm); padding:12px 6px; text-align:center; cursor:pointer; border:1.5px solid var(--border); background:var(--bg-card); color:var(--ink); font-weight:600; font-size:0.95rem; transition: background-color 0.2s, border-color 0.2s, color 0.2s;}
+.mood-card.selected{border-color:var(--accent); background:var(--bg-input);}
+
+.weather-grid, .cycle-grid{display:flex; flex-wrap:wrap; gap:8px;}
+.weather-chip, .cycle-chip{padding:8px 14px; border-radius:16px; border:1px solid var(--border); background:var(--bg-card); color:var(--ink); font-size:0.95rem; cursor:pointer; font-weight:500; transition: background-color 0.3s ease, border-color 0.3s ease;}
+.weather-chip.selected, .cycle-chip.selected{background:var(--accent); color:var(--accent-text); border-color:var(--accent); font-weight:700;}
+
+.tracker-row{display:flex; align-items:center; gap:12px; background:var(--bg-card); padding:14px 16px; border-radius:var(--radius-sm); border:1px solid var(--border); font-weight:500; transition: background-color 0.3s, border-color 0.3s;}
+.tracker-row input[type="range"]{flex:1; accent-color:var(--accent);}
+
+.tags-row, .habits-row{display:flex; flex-wrap:wrap; gap:8px;}
+.tag-chip, .habit-chip{padding:8px 14px; border-radius:16px; border:1.5px solid var(--border); background:var(--bg-card); color:var(--ink); font-size:0.95rem; cursor:pointer; font-weight:500; transition: background-color 0.3s ease, border-color 0.3s ease;}
+.tag-chip.selected, .habit-chip.selected{background:var(--accent); color:var(--accent-text); border-color:var(--accent); font-weight:700;}
+
+/* FÖR ATT SLIPPA IOS ZOOM & GEMENSAMMA INPUT-STILAR */
+input, textarea, select { font-size: 16px !important; }
+.note-area, .gratitude-input, .song-input, .book-input, .book-textarea { width:100%; border:1px solid var(--border); border-radius:12px; padding:14px; background:var(--bg-input); color:var(--ink); resize:none; font-family:inherit; outline:none; font-size:1rem; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.1s ease; box-sizing: border-box; }
+.note-area:focus, .gratitude-input:focus, .song-input:focus, .book-input:focus, .book-textarea:focus {border-color:var(--accent);}
+.note-area, .book-textarea {height:90px; line-height:1.5;} 
+.gratitude-input, .song-input, .book-input {height:48px;}
+
+/* DAGENS MÅL INPUT + KNAPP */
+.todo-input-wrapper { display: flex; background: var(--bg-input); border: 1px solid var(--border); border-radius: 12px; padding: 5px; gap: 6px; margin-bottom: 16px; transition: border-color 0.3s ease; }
+.todo-input-wrapper:focus-within { border-color: var(--accent); }
+.todo-input-wrapper input { flex: 1; background: transparent; border: none; color: var(--ink); padding: 8px 12px; font-size: 1rem; outline: none; font-family: inherit; }
+.todo-add-btn { background: var(--accent); color: var(--accent-text); border: none; border-radius: 10px; padding: 0 18px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: transform 0.1s ease, filter 0.2s ease; display:flex; align-items:center; justify-content:center; }
+.todo-add-btn:active { transform: scale(0.94); filter: brightness(1.1); }
+
+/* BOKHYLLA UI SÄRSKILT */
+.book-status-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.book-status-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 12px; padding: 14px 6px; color: var(--ink); font-size: clamp(0.7rem, 2.5vw, 0.9rem); font-weight: 700; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
+.book-status-btn.selected { background: var(--accent); color: var(--accent-text); border-color: var(--accent); transform: scale(1.03); box-shadow: 0 4px 14px var(--accent-glow); }
+.book-rating-container { display: flex; justify-content: center; gap: 14px; font-size: 2.6rem; margin-bottom: 20px; cursor: pointer; user-select: none; }
+.book-rating-container .star { color: var(--border); opacity: 0.6; transition: color 0.2s, transform 0.2s, text-shadow 0.2s, opacity 0.2s; }
+.book-rating-container .star.active { color: #f59e0b; opacity: 1; text-shadow: 0 0 16px rgba(245,158,11,0.5); }
+.book-rating-container .star:hover { transform: scale(1.15); }
+.book-save-btn { width: 100%; padding: 16px; font-size: 1.05rem; border-radius: 14px; margin-top: 10px; background: var(--accent); color: var(--accent-text); border: none; font-weight: 800; cursor: pointer; transition: transform 0.1s ease, filter 0.2s ease; }
+.book-save-btn:active { transform: scale(0.96); filter: brightness(1.1); }
+
+.photo-upload-area{border:1.5px dashed var(--border); border-radius:var(--radius-sm); padding:14px; text-align:center; cursor:pointer; color:var(--ink-secondary); font-weight:600; font-size:0.9rem; transition: color 0.3s, border-color 0.3s;}
+.photo-preview-grid{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+
+.modal-actions{display:flex; gap:12px; margin-top:24px;}
+.btn{flex:1; padding:14px; border-radius:var(--radius-sm); border:none; color:var(--ink); font-weight:700; cursor:pointer; text-align:center; font-size:0.95rem; transition: background-color 0.2s, color 0.2s;}
+.btn-primary{background:var(--accent) !important; color:var(--accent-text) !important;}
+
+/* Tema Slider: 3 fasta steg */
+.theme-slider-container { display:flex; gap:12px; align-items:center; margin-bottom:20px; background:var(--bg-input); padding:10px 16px; border-radius:var(--radius-sm); border:1px solid var(--border); transition: background-color 0.3s ease; }
+.theme-slider { -webkit-appearance:none; height:8px; background:linear-gradient(to right, #131018, #3a324c, #fcfbfa); border-radius:10px; cursor:pointer; flex:1; outline:none; }
+.theme-slider::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--accent); border:2px solid #fff; box-shadow:0 0 5px rgba(0,0,0,0.5); }
+
+/* Egen Färg Input (RGB Layout) */
+.custom-hex-box { display:flex; align-items:center; gap:8px; background:var(--bg-input); padding:6px 12px; border-radius:var(--radius-sm); border:1px solid var(--border); transition: background-color 0.3s ease, border-color 0.3s ease; }
+.rgb-circle-picker { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); border: 2px solid var(--border); box-shadow: 0 0 8px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: transform 0.2s; }
+.rgb-circle-picker:hover { transform: scale(1.1); border-color: #fff; }
+.rgb-circle-picker input[type="color"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+
+/* Bottenmeny */
+.bottom-nav{
+  flex-shrink:0; display:flex; justify-content:space-around; background:var(--bg); border-top:1px solid var(--border); list-style:none;
+  padding: 10px 4px calc(10px + env(safe-area-inset-bottom)) 4px; transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.bottom-nav-item{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; border:none; background:none; color:var(--ink-muted); gap:4px; font-weight:600; padding:8px 0; border-radius:var(--radius-sm); transition:0.2s;}
+.bottom-nav-item:hover{color:var(--ink); background:var(--bg-card);}
+.bottom-nav-item.active{color:var(--accent); background:var(--bg-input); font-weight:700;}
+.bottom-nav-item span { font-size: 0.75rem; }
+
+.stats-container{display:flex; flex-direction:column; gap:12px;}
+.stat-card{background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; width:100%; transition: background-color 0.3s, border-color 0.3s;}
+.mood-stat-bar-bg{background:var(--bg-input); border-radius:6px; height:8px; overflow:hidden; margin-bottom:6px; transition: background-color 0.3s;}
+.mood-stat-bar-fill{height:100%; border-radius:6px;}
+
+/* Andningsövning Animation */
+.breathing-container { position: relative; width: 220px; height: 220px; margin: 0 auto; display: flex; align-items: center; justify-content: center; }
+.breathing-orb { position: absolute; width: 80px; height: 80px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 50px var(--accent), 0 0 80px var(--accent-glow); opacity: 0.3; filter: blur(4px); }
+.breathing-text { position: relative; z-index: 10; color: #fff; font-weight: 500; font-size: 1.4rem; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+
+/* Egna Taggar & Vanor (Emoji Picker) */
+.emoji-picker { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:16px; }
+.emoji-btn { font-size:1.6rem; background:var(--bg-input); border:1px solid var(--border); border-radius:10px; padding:8px; color:var(--ink); cursor:pointer; transition:0.2s; }
+.emoji-btn.selected { border-color:var(--accent); background:var(--accent-glow); transform:scale(1.1); }
+
+/* Notifieringar */
+.toast{
+  position:fixed; bottom:90px; left:50%; transform:translate(-50%,20px); background:var(--bg-card); color:var(--ink); 
+  padding:10px 20px; border-radius:var(--radius-md); opacity:0; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+  z-index:3000; border:1px solid var(--border); pointer-events:none; font-size:0.95rem; font-weight:600; box-shadow:0 8px 24px rgba(0,0,0,0.3);
+  will-change: transform, opacity;
+}
+.toast.show{opacity:1; transform:translate(-50%,0);}
+
+@media print {
+  body { background: #fff !important; color: #000 !important; overflow: auto !important; height:auto; }
+  .app { height: auto !important; overflow: visible !important; border:none !important; box-shadow:none !important; max-width:100%; }
+  .header, .bottom-nav, .icon-btn, .nav-pills, .weather-bar, .gentle-banner { display: none !important; }
+  .view-section { display: none !important; }
+  #calendarView { display: flex !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="modal-overlay active" id="pinOverlay" style="display:none; z-index:4000;">
+  <div class="modal-sheet" style="text-align:center; max-width:300px;">
+    <h3 tabindex="0">🔒 Ange PIN-kod</h3>
+    <input type="password" id="pinInput" maxlength="4" style="text-align:center; width:120px; letter-spacing:8px; padding:6px; background:var(--bg-input); border:1px solid var(--border); color:var(--ink); border-radius:10px; margin-top:14px; font-size: 1.5rem;" oninput="checkPinCode(this.value)" aria-label="Ange 4-siffrig PIN-kod">
+  </div>
+</div>
+
+<div class="modal-overlay" id="breathOverlay" style="background: rgba(0,0,0,0.92); backdrop-filter: blur(8px);" onclick="closeBreathing(event)">
+  <div style="text-align:center; width:100%; max-width:400px; display:flex; flex-direction:column; align-items:center;" onclick="event.stopPropagation()">
+    <h3 style="font-size: 1.5rem; font-weight: 300; color: #fff; opacity:0.7; letter-spacing: 3px; margin-bottom: 60px; text-transform:uppercase;">Stund av ro</h3>
+    <div class="breathing-container">
+      <div class="breathing-orb" id="breathOrb"></div>
+      <div class="breathing-text" id="breathText" aria-live="polite">Gör dig redo...</div>
+    </div>
+    <button class="btn" onclick="closeBreathing()" style="margin-top:80px; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); width: auto; padding: 14px 34px; border-radius: 30px; font-weight:500; font-size:1rem;" aria-label="Avsluta andningsövning">Avsluta övning</button>
+  </div>
+</div>
+
+<!-- Modal: Skapa Egen Tagg / Vana -->
+<div class="modal-overlay" id="customTagModal" style="z-index: 2000;" onclick="closeCustomModal()">
+  <div class="modal-sheet" style="max-width:340px; text-align:center;" onclick="event.stopPropagation()">
+    <h3 id="customModalTitle" style="margin-bottom:14px; font-size: 1.2rem;">Ny</h3>
+    
+    <div id="emojiSection">
+      <div class="section-label" style="margin-top:0;">1. Välj en ikon</div>
+      <div class="emoji-picker" id="emojiPickerGrid"></div>
+      <div class="section-label">2. Namn</div>
+    </div>
+
+    <div id="noEmojiSection" style="display:none;">
+      <div class="section-label" style="margin-top:0;">Aktivitetens namn</div>
+    </div>
+
+    <input type="text" id="customTagInput" class="song-input" placeholder="T.ex. Spela gitarr" style="text-align:center; font-size:1rem;" aria-label="Skriv namn">
+    <div class="modal-actions">
+      <button class="btn" style="background:var(--bg-input); color:var(--ink);" onclick="closeCustomModal()">Avbryt</button>
+      <button class="btn btn-primary" onclick="saveCustomChip()">Lägg till</button>
+    </div>
+  </div>
+</div>
+
+<!-- Öppna när... Modal -->
+<div class="modal-overlay" id="secretNotesModal" onclick="closeSecretNotes(event)">
+  <div class="modal-sheet" style="max-width:360px; text-align:left;" onclick="event.stopPropagation()">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 tabindex="0">💌 Öppna när...</h3>
+      <button class="icon-btn" onclick="closeSecretNotes()" aria-label="Stäng meddelanden">✕</button>
+    </div>
+    <p style="font-size:0.85rem; color:var(--ink-secondary); margin-bottom:12px;">Välj ett ögonblick:</p>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <button class="btn" style="background:var(--bg-input); text-align:left; color:var(--ink); padding:10px 14px; font-weight:600;" onclick="showSecretNote('ledsen')">💙 När du är ledsen</button>
+      <button class="btn" style="background:var(--bg-input); text-align:left; color:var(--ink); padding:10px 14px; font-weight:600;" onclick="showSecretNote('stressad')">✨ När du känner dig stressad</button>
+      <button class="btn" style="background:var(--bg-input); text-align:left; color:var(--ink); padding:10px 14px; font-weight:600;" onclick="showSecretNote('stolt')">🌸 När du vill ha lite extra pepp</button>
+      <button class="btn" style="background:var(--bg-input); text-align:left; color:var(--ink); padding:10px 14px; font-weight:600;" onclick="showSecretNote('saknar')">❤️ När du saknar mig</button>
+    </div>
+    <div id="secretNoteContent" style="margin-top:14px; padding:16px; background:var(--bg-card); border-radius:var(--radius-sm); font-size:0.95rem; display:none; line-height:1.6; border:1px solid var(--border); color:var(--ink);" aria-live="polite"></div>
+  </div>
+</div>
+
+<!-- Månadens Wrapped Modal -->
+<div class="modal-overlay" id="wrappedModal" onclick="closeWrappedModal(event)">
+  <div class="modal-sheet" style="max-width:380px; text-align:center;" onclick="event.stopPropagation()">
+    <h3 tabindex="0">✨ Din Månads-Wrapped ✨</h3>
+    <div id="wrappedContent" style="margin:14px 0; font-size:0.95rem; line-height:1.6; text-align:left; background:var(--bg-card); padding:16px; border-radius:var(--radius-md); border:1px solid var(--border); color:var(--ink);"></div>
+    <button class="btn btn-primary" onclick="closeWrappedModal()" aria-label="Stäng månadssammanfattning">Stäng</button>
+  </div>
+</div>
+
+<div class="app">
+  <header class="header">
+    <div class="header-top">
+      <div class="logo" id="pageTitle" onclick="editTitle()" title="Klicka för att ändra namn" tabindex="0" aria-label="Din journal-titel, klicka för att ändra">Min Välmående-Journal</div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="openSecretNotes()" aria-label="Öppna hemliga brev" title="Öppna när...">💌</button>
+        <button class="icon-btn" onclick="window.print()" aria-label="Skriv ut eller spara som PDF" title="Skriv ut / PDF">🖨️</button>
+        <button class="icon-btn" onclick="openBreathing()" aria-label="Starta andningsövning" title="Andningsövning">🌸</button>
+        <button class="icon-btn" onclick="openSettings()" aria-label="Öppna inställningar" title="Inställningar">⚙️</button>
+        <button class="icon-btn primary" onclick="openModal(new Date())" aria-label="Skapa nytt inlägg för idag" title="Nytt inlägg">✏️</button>
+      </div>
+    </div>
+    <div class="nav-pills" id="calendarHeaderPills">
+      <button class="pill" onclick="changeMonth(-1)" aria-label="Gå till föregående månad">&larr; Föreg.</button>
+      <button class="pill active" id="monthPill" tabindex="0">Månad</button>
+      <button class="pill" onclick="changeMonth(1)" aria-label="Gå till nästa månad">Nästa &rarr;</button>
+      <input type="date" class="date-jump-input" id="jumpDateInput" onchange="jumpToDate(this.value)" aria-label="Välj datum att hoppa till">
+    </div>
+  </header>
+
+  <div class="weather-bar" id="weatherBar" onclick="promptChangeLocation()" tabindex="0" aria-label="Dagens väder, klicka för att byta stad">
+    <span id="weatherEmoji" style="font-size: 1.4rem;" aria-hidden="true">🌤️</span>
+    <div class="weather-info">
+      <div class="weather-temp" id="weatherTemp">Laddar...</div>
+      <div class="weather-desc" id="weatherDesc">Klicka för stad 📍</div>
+    </div>
+  </div>
+
+  <div class="gentle-banner hidden" id="gentleBanner" onclick="openModal(new Date())" tabindex="0" aria-label="Påminnelse: Logga dagens humör">
+    <span style="font-size:1.4rem;" aria-hidden="true">🌱</span>
+    <div style="flex:1;">
+      <div style="font-weight:700; font-size:0.9rem;">Dags för en liten logg?</div>
+      <div style="font-size:0.8rem; color:var(--ink-secondary);">Klicka här för att logga idag.</div>
+    </div>
+  </div>
+
+  <!-- Kalender -->
+  <main id="calendarView" class="view-section active" aria-label="Kalendervy">
+    <table class="dashboard-table">
+      <tr>
+        <td><b>Månadens intention:</b></td>
+        <td style="text-align: right;"><span id="monthIntentionDisplay" style="color:var(--accent); cursor:pointer; font-weight:bold;" onclick="editMonthIntention()" tabindex="0" aria-label="Sätt månadens intention">Sätt ord...</span></td>
+      </tr>
+      <tr>
+        <td><span id="quickWaterDisplay" aria-live="polite">💧 Dagens vatten: 0 glas</span></td>
+        <td style="text-align: right; white-space: nowrap;">
+          <button class="btn" style="padding:6px 10px; font-size:0.85rem; background:var(--bg-input); color:#ef4444; width:auto; display:inline-block; flex:none; margin-right:4px;" onclick="quickRemoveWater()" aria-label="Ta bort ett glas vatten">- Glas</button>
+          <button class="btn btn-primary" style="padding:6px 10px; font-size:0.85rem; width:auto; display:inline-block; flex:none;" onclick="quickAddWater()" aria-label="Lägg till ett glas vatten">+ Glas</button>
+        </td>
+      </tr>
+    </table>
+
+    <div class="affirmation-card" id="affirmationCard" onclick="shuffleAffirmation()" tabindex="0" aria-live="polite" aria-label="Dagens peppcitat. Klicka för ett nytt">Laddar citat...</div>
+    
+    <!-- AKTIVITETSTIPS -->
+    <div class="activity-banner" onclick="shuffleActivitySuggestion()" tabindex="0" aria-label="Aktivitetstips. Klicka för ett nytt">
+      <span style="font-size: 1.4rem;" aria-hidden="true">💡</span>
+      <div style="flex:1;">
+        <div style="font-size: 0.75rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px;">Dagens aktivitetstips</div>
+        <div id="activitySuggestionText" style="font-size: 0.9rem; color: var(--ink); margin-top: 2px;">Laddar tips...</div>
+      </div>
+    </div>
+
+    <div id="memoryLaneContainer" style="width:100%;"></div>
+
+    <div class="cal-weekdays" aria-hidden="true"><div>Må</div><div>Ti</div><div>On</div><div>To</div><div>Fr</div><div>Lö</div><div>Sö</div></div>
+    <div class="cal-grid" id="calendarGrid" role="grid" aria-label="Kalenderrutnät"></div>
+  </main>
+
+  <!-- Scrapbook -->
+  <main id="scrapbookView" class="view-section" aria-label="Scrapbookvy">
+    <div class="search-container">
+      <input type="text" class="search-input" id="searchInput" placeholder="🔍 Sök i minnen, taggar..." oninput="debouncedSearch(this.value, document.getElementById('monthFilterSelect').value)" aria-label="Sök i dina journalinlägg">
+      <select id="monthFilterSelect" class="date-jump-input" style="font-size:0.9rem; padding:8px 12px;" onchange="renderScrapbook(document.getElementById('searchInput').value, this.value)" aria-label="Filtrera inlägg efter månad">
+        <option value="">Alla månader</option>
+      </select>
+    </div>
+    <div class="scrapbook-container" id="scrapbookContainer" aria-live="polite"></div>
+  </main>
+
+  <!-- Bokhylla -->
+  <main id="booksView" class="view-section" aria-label="Bokhyllavy">
+    <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+      <h2 style="font-size:1.25rem;">📚 Min Bokhylla</h2>
+      <button class="btn btn-primary" style="padding:8px 14px; font-size:0.9rem; flex:0; width:auto;" onclick="openBookModal()" aria-label="Lägg till ny bok">+ Ny Bok</button>
+    </div>
+    <div class="books-container" id="booksContainer" aria-live="polite"></div>
+  </main>
+
+  <!-- Fotogalleri -->
+  <main id="galleryView" class="view-section" aria-label="Gallerivy">
+    <h2 style="font-size:1.25rem; text-align:center;">🖼️ Fotogalleri</h2>
+    <div class="gallery-container" id="galleryContainer" aria-live="polite"></div>
+  </main>
+
+  <!-- Pixlar -->
+  <main id="pixelsView" class="view-section" aria-label="Pixelvy">
+    <h2 style="font-size:1.25rem; text-align:center;">📊 Året i Pixlar</h2>
+    <div class="pixels-container" id="pixelsContainer" aria-live="polite"></div>
+  </main>
+
+  <!-- Insikter -->
+  <main id="statsView" class="view-section" aria-label="Insiktsvy">
+    <div class="stats-container">
+      <h2 style="text-align:center; font-size:1.25rem;">🌿 Välmående-insikter</h2>
+      
+      <div class="stat-card" style="background:linear-gradient(135deg,rgba(251,113,133,0.15),rgba(232,121,249,0.15)); border:1.5px solid var(--accent); text-align:center; cursor:pointer;" onclick="openWrappedModal()" tabindex="0" aria-label="Skapa en sammanfattning för månaden">
+        <h3 style="font-size:0.85rem; color:var(--accent); text-transform:uppercase; margin-bottom:4px;">✨ Skapa Månadens Wrapped ✨</h3>
+        <p style="font-size:0.9rem; color:var(--ink-secondary); font-weight:500;">Klicka här för magi!</p>
+      </div>
+
+      <div class="stat-card" style="background:linear-gradient(135deg,var(--bg-card),var(--bg-input)); border-color:var(--accent);">
+        <h3 style="font-size:0.8rem; color:var(--accent); text-transform:uppercase; margin-bottom:4px;">✨ Månadssammanfattning</h3>
+        <p id="monthlySummaryText" style="font-size:0.9rem; line-height:1.5;">Laddar...</p>
+      </div>
+
+      <div class="stat-card" style="border-left: 4px solid var(--accent); cursor:pointer;" onclick="drawGratitudeJar()" tabindex="0" aria-label="Dra en tacksamhetslapp från burken">
+        <h3 style="font-size:0.8rem; color:var(--accent); text-transform:uppercase; margin-bottom:4px;">🏺 Tacksamhetsburken</h3>
+        <p id="gratitudeJarText" style="font-size:0.9rem; color:var(--ink-secondary); font-style:italic;" aria-live="polite">Klicka här för att dra en lapp...</p>
+      </div>
+
+      <div class="stat-card" style="border-left: 4px solid var(--accent);">
+        <h3 style="font-size:0.8rem; color:var(--ink-secondary); text-transform:uppercase; margin-bottom:4px; font-weight:700;">🔥 Vanesviter (Streaks)</h3>
+        <p id="streakText" style="font-size:0.9rem; line-height:1.5;">Laddar...</p>
+      </div>
+
+      <div class="stat-card" style="border-left: 4px solid var(--accent);">
+        <h3 style="font-size:0.8rem; color:var(--ink-secondary); text-transform:uppercase; margin-bottom:4px; font-weight:700;">🏷️ Aktivitetsstatistik</h3>
+        <p id="tagStatsText" style="font-size:0.9rem; line-height:1.5;">Laddar...</p>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="stat-card" style="text-align:center;">
+          <h3 style="font-size:0.75rem; color:var(--ink-secondary); text-transform:uppercase; font-weight:700;">Inlägg</h3>
+          <p id="statTotal" style="font-size:1.5rem; font-weight:bold; color:var(--accent)">0</p>
+        </div>
+        <div class="stat-card" style="text-align:center;">
+          <h3 style="font-size:0.75rem; color:var(--ink-secondary); text-transform:uppercase; font-weight:700;">Snittsömn</h3>
+          <p id="statSleep" style="font-size:1.5rem; font-weight:bold; color:var(--accent)">-</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <h3 style="font-size:0.8rem; text-transform:uppercase; color:var(--ink-secondary); margin-bottom:8px; font-weight:700;">Humör-tracker</h3>
+        <div id="moodTrackerStats"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottenmeny -->
+  <nav>
+    <ul class="bottom-nav">
+      <li><button class="bottom-nav-item active" onclick="switchView('calendar', this)" aria-label="Visa kalendern">📅<span>Kalender</span></button></li>
+      <li><button class="bottom-nav-item" onclick="switchView('scrapbook', this)" aria-label="Visa scrapbook">📖<span>Scrapbook</span></button></li>
+      <li><button class="bottom-nav-item" onclick="switchView('books', this)" aria-label="Visa bokhyllan">📚<span>Bokhylla</span></button></li>
+      <li><button class="bottom-nav-item" onclick="switchView('gallery', this)" aria-label="Visa galleriet">🖼️<span>Galleri</span></button></li>
+      <li><button class="bottom-nav-item" onclick="switchView('pixels', this)" aria-label="Visa året i pixlar">📊<span>Pixlar</span></button></li>
+      <li><button class="bottom-nav-item" onclick="switchView('stats', this)" aria-label="Visa insikter och statistik">🌿<span>Insikter</span></button></li>
+    </ul>
+  </nav>
+</div>
+
+<!-- Modal: Inställningar -->
+<div class="modal-overlay" id="settingsOverlay" onclick="closeSettings(event)">
+  <div class="modal-sheet" style="max-width:400px;" onclick="event.stopPropagation()">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <h3 tabindex="0" style="font-size:1.2rem;">⚙️ Inställningar</h3>
+      <button class="icon-btn" onclick="closeSettings()" aria-label="Stäng inställningar">✕</button>
+    </div>
+
+    <div class="section-label">Tema (Mörkt / Skymning / Ljust)</div>
+    <div class="theme-slider-container">
+      <span style="font-size:1.2rem;" aria-hidden="true">🌙</span>
+      <input type="range" id="themeSlider" class="theme-slider" min="0" max="100" step="50" value="0" aria-label="Välj tema: mörkt, skymning eller ljust" oninput="applyThemeSlider(this.value)">
+      <span style="font-size:1.2rem;" aria-hidden="true">☀️</span>
+    </div>
+    
+    <div class="section-label">Accentfärg & Egen färg</div>
+    <div style="display:flex; gap:12px; margin-bottom:20px; align-items:center; flex-wrap:wrap;">
+      <button onclick="applyCustomColorFromPicker('#fb7185')" style="width:34px; height:34px; border-radius:50%; background:#fb7185; cursor:pointer; border:none;" title="Puderrosa" aria-label="Puderrosa"></button>
+      <button onclick="applyCustomColorFromPicker('#c084fc')" style="width:34px; height:34px; border-radius:50%; background:#c084fc; cursor:pointer; border:none;" title="Lavendel" aria-label="Lavendel"></button>
+      <button onclick="applyCustomColorFromPicker('#34d399')" style="width:34px; height:34px; border-radius:50%; background:#34d399; cursor:pointer; border:none;" title="Mint" aria-label="Mint"></button>
+      <button onclick="applyCustomColorFromPicker('#fbbf24')" style="width:34px; height:34px; border-radius:50%; background:#fbbf24; cursor:pointer; border:none;" title="Champagne" aria-label="Champagne"></button>
+      
+      <div style="width:1px; height:24px; background:var(--border);"></div>
+      
+      <div class="custom-hex-box">
+        <label class="rgb-circle-picker" title="Välj en egen färg från hjulet" aria-label="Öppna färgväljare">
+          <input type="color" id="rgbColorPicker" oninput="applyCustomColorFromPicker(this.value, false)" onchange="applyCustomColorFromPicker(this.value, true)">
+        </label>
+      </div>
+    </div>
+
+    <!-- PWA Install Button -->
+    <div id="pwaInstallContainer" style="display:none; margin-bottom:20px;">
+      <div class="section-label">Installera</div>
+      <button class="btn btn-primary" id="installPwaBtn" style="padding:10px; width: 100%;">Ladda ner som App</button>
+    </div>
+
+    <div class="section-label">Backup</div>
+    <div style="display:flex; gap:10px; margin-bottom:20px;">
+      <button class="btn btn-primary" onclick="exportBackup()">Exportera</button>
+      <button class="btn" style="background:var(--bg-input); color:var(--ink);" onclick="document.getElementById('importFile').click()">Importera</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(event)">
+    </div>
+
+    <div class="section-label">Lås med PIN-kod</div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <input type="password" id="newPinInput" maxlength="4" placeholder="4 siffror" style="padding:12px; background:var(--bg-input); border:1px solid var(--border); color:var(--ink); border-radius:8px; width:120px; font-size:1rem;" aria-label="Ange ny 4-siffrig PIN">
+      <button class="btn btn-primary" onclick="savePinCode()" style="flex:1;">Spara</button>
+      <button class="btn" style="background:var(--bg-input); color:#ef4444; flex:1;" onclick="removePinCode()">Ta bort</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Logga inlägg (Huvudfönster) -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <h3 id="modalDate" style="font-size:1.2rem;" tabindex="0">Datum</h3>
+      <button class="icon-btn" onclick="closeModal()" aria-label="Stäng redigeringsfönster">✕</button>
+    </div>
+    
+    <div class="section-label">Humör</div>
+    <div class="mood-grid" id="moodGrid" role="radiogroup" aria-label="Välj ditt humör idag">
+      <button class="mood-card" data-mood="happy" onclick="selectMood('happy')" role="radio" aria-checked="false">😊<br><small>Glad</small></button>
+      <button class="mood-card" data-mood="calm" onclick="selectMood('calm')" role="radio" aria-checked="false">😌<br><small>Lugn</small></button>
+      <button class="mood-card" data-mood="productive" onclick="selectMood('productive')" role="radio" aria-checked="false">⚡<br><small>Fokus</small></button>
+      <button class="mood-card" data-mood="tired" onclick="selectMood('tired')" role="radio" aria-checked="false">😴<br><small>Trött</small></button>
+      <button class="mood-card" data-mood="sad" onclick="selectMood('sad')" role="radio" aria-checked="false">😢<br><small>Ledsen</small></button>
+      <button class="mood-card" data-mood="meh" onclick="selectMood('meh')" role="radio" aria-checked="false">😐<br><small>Meh</small></button>
+    </div>
+
+    <div class="section-label">Väder</div>
+    <div class="weather-grid" id="weatherContainer" role="group" aria-label="Välj väder">
+      <button class="weather-chip" onclick="selectWeather(this)">☀️ Soligt</button>
+      <button class="weather-chip" onclick="selectWeather(this)">⛅ Molnigt</button>
+      <button class="weather-chip" onclick="selectWeather(this)">🌧️ Regnigt</button>
+      <button class="weather-chip" onclick="selectWeather(this)">❄️ Snöigt</button>
+      <button class="weather-chip" onclick="selectWeather(this)">💨 Blåsigt</button>
+    </div>
+
+    <div class="section-label">Kropp & Cykel</div>
+    <div class="cycle-grid" id="cycleContainer" role="group" aria-label="Hormoncykel">
+      <button class="cycle-chip" onclick="selectCycle(this)">🌸 Balans</button>
+      <button class="cycle-chip" onclick="selectCycle(this)">🩸 Mens</button>
+      <button class="cycle-chip" onclick="selectCycle(this)">🥚 Ägglossning</button>
+      <button class="cycle-chip" onclick="selectCycle(this)">🌙 PMS / Känslig</button>
+    </div>
+
+    <div class="section-label" style="display:flex; justify-content:space-between; align-items:center;">
+      <span>Dagbok & Tankar</span>
+      <button style="background:transparent; border:1px solid var(--accent); color:var(--accent); padding:4px 10px; border-radius:14px; font-size:0.75rem; font-weight:700; cursor:pointer;" onclick="insertDailyPrompt()" aria-label="Slumpa en ny fråga att svara på">✨ Ny fråga</button>
+    </div>
+    <textarea class="note-area" id="noteInput" placeholder="Skriv fritt om din dag..." aria-label="Dagbokstext"></textarea>
+
+    <!-- NY DESIGN PÅ DAGENS MÅL -->
+    <div class="section-label">Dagens Mål</div>
+    <div class="todo-input-wrapper">
+      <input type="text" id="todoInput" placeholder="Skriv en liten uppgift..." aria-label="Lägg till ett nytt mål">
+      <button class="todo-add-btn" onclick="addTodoItem()">Lägg till</button>
+    </div>
+    <div id="todoListContainer" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;"></div>
+
+    <div class="section-label">Dagens Låt</div>
+    <input type="text" class="song-input" id="songInput" placeholder="🎵 Artist - Låtnamn" aria-label="Ange dagens låt">
+
+    <div class="section-label">Nattens Dröm ☁️</div>
+    <input type="text" class="gratitude-input" id="dreamInput" placeholder="Vad drömde du inatt?" aria-label="Ange nattens dröm">
+
+    <div class="section-label">Matminne 🍲</div>
+    <input type="text" class="gratitude-input" id="foodInput" placeholder="Dagens godaste måltid..." aria-label="Ange dagens matminne">
+
+    <div class="section-label">Vanor</div>
+    <div class="habits-row" id="habitsContainer" role="group" aria-label="Välj vanor">
+      <!-- Fylls dynamiskt av JS -->
+    </div>
+
+    <div class="section-label">Aktiviteter</div>
+    <div class="tags-row" id="tagsContainer" role="group" aria-label="Välj aktiviteter">
+      <!-- Fylls dynamiskt av JS -->
+    </div>
+
+    <div class="section-label">Energi (1-5)</div>
+    <div class="tracker-row">
+      <input type="range" id="energyInput" min="1" max="5" value="3" oninput="document.getElementById('energyVal').textContent=this.value" aria-label="Sätt din energinivå">
+      <span style="font-weight:bold;color:var(--accent);width:30px;text-align:right"><span id="energyVal" aria-hidden="true">3</span>/5</span>
+    </div>
+
+    <div class="section-label">Stress (1-5)</div>
+    <div class="tracker-row">
+      <input type="range" id="stressInput" min="1" max="5" value="2" oninput="document.getElementById('stressVal').textContent=this.value" aria-label="Sätt din stressnivå">
+      <span style="font-weight:bold;color:var(--accent);width:30px;text-align:right"><span id="stressVal" aria-hidden="true">2</span>/5</span>
+    </div>
+
+    <div class="section-label">Vatten (glas)</div>
+    <div class="tracker-row">
+      <input type="range" id="waterInput" min="0" max="10" value="4" oninput="document.getElementById('waterVal').textContent=this.value" aria-label="Registrera vattenglas">
+      <span style="font-weight:bold;color:var(--accent);width:35px;text-align:right"><span id="waterVal" aria-hidden="true">4</span>st</span>
+    </div>
+
+    <div class="section-label">Sömn (h)</div>
+    <div class="tracker-row">
+      <input type="range" id="sleepInput" min="0" max="14" step="0.5" value="8" oninput="document.getElementById('sleepVal').textContent=this.value" aria-label="Registrera sömntimmar">
+      <span style="font-weight:bold;color:var(--accent);width:40px;text-align:right"><span id="sleepVal" aria-hidden="true">8</span>h</span>
+    </div>
+
+    <div class="section-label">✨ Tacksamhet</div>
+    <input type="text" class="gratitude-input" id="gratitudeInput" placeholder="Skriv in något du är tacksam över..." aria-label="Ange vad du är tacksam för">
+
+    <div class="section-label">Röstmemo</div>
+    <div style="display:flex; gap:12px; align-items:center; margin-top:8px;">
+      <button class="btn" id="recordAudioBtn" onclick="toggleRecording()" style="background:var(--bg-input); width:auto; color:var(--ink);">🎙️ Spela in</button>
+      <audio id="audioPlayback" controls style="display:none; height:44px; flex:1;" aria-label="Röstmemo spelare"></audio>
+      <button class="btn" id="deleteAudioBtn" onclick="deleteAudio()" style="display:none; background:var(--bg-input); color:#ef4444; width:auto;" aria-label="Ta bort röstmemo">Ta bort</button>
+    </div>
+
+    <div class="section-label">Bilder 📷</div>
+    <button class="photo-upload-area" onclick="document.getElementById('photoInput').click()" style="width:100%; border:1.5px dashed var(--border); background:transparent; display:block;">Klicka för att lägga till bilder</button>
+    <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)" aria-label="Filväljare för bilduppladdning">
+    <div class="photo-preview-grid" id="photoPreviewContainer"></div>
+
+    <div class="modal-actions">
+      <button class="btn" onclick="deleteEntry()" style="background:var(--bg-input); color:#ef4444;" aria-label="Ta bort detta dagboksinlägg">Rensa / Ta bort</button>
+      <button class="btn btn-primary" onclick="saveEntry()" aria-label="Spara detta dagboksinlägg">Spara i Journalen</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" aria-live="polite">Sparat!</div>
+
+<script>
+// --- PWA SERVICE WORKER INJECTION ---
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    const swCode = `
+      const CACHE_NAME = 'bullet-journal-pwa-v1';
+      self.addEventListener('install', e => e.waitUntil(self.skipWaiting()));
+      self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+      self.addEventListener('fetch', e => {
+        e.respondWith(fetch(e.request).catch(() => new Response('App is running offline')));
+      });
+    `;
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swUrl).catch(err => console.log('Service Worker kunde inte registreras.'));
+  });
+}
+
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const installContainer = document.getElementById('pwaInstallContainer');
+  const installBtn = document.getElementById('installPwaBtn');
+  if(installContainer && installBtn) {
+    installContainer.style.display = 'block';
+    installBtn.onclick = () => {
+      installContainer.style.display = 'none';
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => { deferredPrompt = null; });
+    };
+  }
+});
+
+// --- DATABAS & INDEXEDDB (v95) LÖSER 5MB GRÄNSEN ---
+const TITLE_KEY = 'bullet_journal_title_v95';
+const PIN_KEY = 'bullet_journal_pin_v95';
+const ACCENT_KEY = 'bullet_journal_accent_v95';
+const THEME_KEY = 'bullet_journal_theme_v95';
+const LOCATION_KEY = 'bullet_journal_location_v95';
+
+let entries = {};
+let books = [];
+let monthIntentions = {};
+
+const dbPromise = new Promise((resolve, reject) => {
+    const req = indexedDB.open('BulletJournalDB', 1);
+    req.onupgradeneeded = e => {
+        const db = e.target.result;
+        if(!db.objectStoreNames.contains('store')) db.createObjectStore('store');
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+});
+
+async function idbGet(key) {
+    const db = await dbPromise;
+    return new Promise(resolve => {
+        const tx = db.transaction('store', 'readonly');
+        const req = tx.objectStore('store').get(key);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => resolve(null);
+    });
+}
+
+async function idbSet(key, val) {
+    const db = await dbPromise;
+    return new Promise(resolve => {
+        const tx = db.transaction('store', 'readwrite');
+        tx.objectStore('store').put(val, key);
+        tx.oncomplete = () => resolve();
+    });
+}
+
+// Beder mobilen att spara data permanent
+if (navigator.storage && navigator.storage.persist) {
+  navigator.storage.persist().then(persistent => {
+    if(persistent) console.log("Lagring säkrad mot automatisk rensning.");
+  });
+}
+
+let journalTitle = localStorage.getItem(TITLE_KEY) || 'Min Välmående-Journal';
+let customAccent = localStorage.getItem('bullet_journal_custom_hex') || localStorage.getItem(ACCENT_KEY) || null;
+
+let storedTheme = localStorage.getItem(THEME_KEY);
+let currentThemeValue = 0;
+if (storedTheme === 'light') currentThemeValue = 100;
+else if (storedTheme === 'dark') currentThemeValue = 0;
+else currentThemeValue = parseInt(storedTheme) || 0;
+
+let currentDate = new Date();
+let selectedDateKey = null, selectedMood = null, selectedWeather = null, selectedCycle = null;
+let currentTodos = [], currentPhotos = [], currentAudio = null;
+let activeView = 'calendar';
+let searchTimeout = null, mediaRecorder = null, audioChunks = [], breathTimeouts = [];
+
+// Bokhylla variabler
+let currentBookStatus = 'toread';
+let currentBookRating = 0;
+
+// Custom Tags & Habits UI Logic
+let customAddType = '';
+let selectedCustomEmoji = '✨';
+
+const defaultHabits = ["💧 Vattenmål", "🏃‍♀️ Rörelse", "🧘‍♀️ Mindfulness", "📵 Skärmpaus", "📚 Läst bok"];
+const defaultTags = ["Träning", "Promenad", "Meditation", "Natur", "Socialt", "Vila"];
+
+let customHabits = [];
+let customTags = [];
+try { customHabits = JSON.parse(localStorage.getItem('bullet_journal_custom_habits')) || []; } catch(e) { customHabits = []; }
+try { customTags = JSON.parse(localStorage.getItem('bullet_journal_custom_tags')) || []; } catch(e) { customTags = []; }
+
+const emojiList = ['✨','💧','🏃‍♀️','🧘‍♀️','🎸','🎨','🎮','📖','🍳','🧹','🚗','✈️','🐾','🪴','☕','🎧','💻','✍️','🛍️','🚲'];
+
+// --- DATA OBJEKT ---
+const affirmations = [
+  "Du gör så gott du kan, och det räcker mer än väl. 🌱",
+  "Varje liten paus är ett steg mot ny energi. ☕",
+  "Dina känslor är giltiga, ta hand om dig själv idag. 💙",
+  "Du behöver inte ha allt klart på en gång. Ta ett andetag. ✨",
+  "Var stolt över de små framstegen du gör varje dag. 🌸",
+  "Idag är en ny dag fylld av nya möjligheter. ☀️"
+];
+
+const dailyPrompts = [
+  "Vad fick dig att skratta den här veckan?",
+  "Vilken egenskap hos dig själv uppskattar du mest just nu?",
+  "Vad skulle du vilja släppa taget om som tynger dig?",
+  "Beskriv en liten stund idag som kändes extra mysig.",
+  "Om du fick ge dig själv ett gott råd just nu, vad skulle det vara?",
+  "Vad ser du mest fram emot den kommande tiden?"
+];
+
+const activitySuggestions = [
+  "Ta en 15 minuters promenad utan telefonen.",
+  "Läs ett kapitel i en bok du gillar.",
+  "Gör 5 minuter av enkel stretching.",
+  "Lyssna på din favoritlåt och blunda.",
+  "Testa ett nytt, hälsosamt recept.",
+  "Rensa eller organisera en liten yta (t.ex. ett bord).",
+  "Ring eller skicka ett meddelande till en vän.",
+  "Skriv ner tre saker du är tacksam för idag.",
+  "Ta en paus och drick ett stort glas vatten.",
+  "Gör en snabb mindfulness- eller andningsövning.",
+  "Rita, måla eller klottra fritt i 10 minuter.",
+  "Ta ett varmt, avslappnande bad eller dusch.",
+  "Lyssna på ett inspirerande podcast-avsnitt.",
+  "Titta på ett avsnitt av din favorit-komediserie.",
+  "Planera en rolig framtida utflykt eller resa.",
+  "Köp eller plocka en blomma/växt till dig själv.",
+  "Gör en digital detox i en timme.",
+  "Kolla igenom gamla, härliga foton och minns tillbaka.",
+  "Vädra hemmet och släpp in lite frisk luft.",
+  "Ge dig själv en hand- eller fotmassage med en god kräm."
+];
+
+const selfCareTips = [
+  "Drick ett stort glas kallt vatten och ta tre djupa andetag. 💧",
+  "Gör en kopp av din favorithryck och sitt i tystnad i 5 minuter. ☕",
+  "Sätt på en låt du älskar och dansa eller sträck på dig ordentligt! 🎶",
+  "Gå ut och känn frisk luft på ansiktet i 10 minuter. ☀️",
+  "Skicka ett snällt meddelande till någon du tycker om. 💌",
+  "Lägg dig ner, blunda och släpp spänningen i axlar och käke. 🌸"
+];
+
+const secretNotes = {
+  ledsen: "Kom ihåg att det är helt okej att ha tunga dagar. Du är älskad, trygg och fantastisk precis som du är. Ta en stund för dig själv och vila. 💙",
+  stressad: "Stanna upp, släpp axlarna och ta tre djupa andetag. Du behöver inte hinna med allt på en gång. Du gör det superbra! ✨",
+  stolt: "Du är så otroligt duktig och inspirerande. Glöm inte att stanna upp och vara stolt över allt du är och gör! 🌸",
+  saknar: "Tänk på att även när vi inte är på samma plats så tänker jag på dig. Du har alltid en plats hos mig! ❤️"
+};
+
+// --- FÄRGTEMAN ---
+const themeDark = { bg:'#09070c', bgElevated:'#131018', bgCard:'#181421', bgInput:'#221b2e', border:'#352847', borderHover:'#523f6d' };
+const themeMid = { bg:'#231e2b', bgElevated:'#2d2638', bgCard:'#342c42', bgInput:'#413752', border:'#514566', borderHover:'#64557d' };
+const themeLight = { bg:'#fcfbfa', bgElevated:'#ffffff', bgCard:'#ffffff', bgInput:'#fbf2f6', border:'#f0d6e4', borderHover:'#dfb3cb' };
+
+const moodConfig = {
+  happy: { emoji:'😊', name:'Glad', color:'#fb7185', bg:'#1a0f18', elevated:'#261524', card:'#331b31', input:'#40223e', border:'#4d294b' },
+  calm: { emoji:'😌', name:'Lugn', color:'#c084fc', bg:'#161321', elevated:'#201b2d', card:'#2b243b', input:'#372e4a', border:'#4d4163' },
+  productive: { emoji:'⚡', name:'Fokus', color:'#e879f9', bg:'#18121f', elevated:'#241a2e', card:'#30233e', input:'#3c2d4f', border:'#553f6e' },
+  tired: { emoji:'😴', name:'Trött', color:'#fbbf24', bg:'#1a1618', elevated:'#262024', card:'#332a30', input:'#42363e', border:'#5c4c57' },
+  sad: { emoji:'😢', name:'Ledsen', color:'#60a5fa', bg:'#121621', elevated:'#1a2130', card:'#242d40', input:'#2e3952', border:'#425375' },
+  meh: { emoji:'😐', name:'Meh', color:'#f472b6', bg:'#1a1219', elevated:'#261a24', card:'#332230', input:'#422c3e', border:'#5c3e56' }
+};
+
+const weatherMap = {
+  0:{emoji:'☀️',desc:'Klart'}, 1:{emoji:'🌤️',desc:'Mest klart'}, 2:{emoji:'⛅',desc:'Delvis molnigt'},
+  3:{emoji:'☁️',desc:'Molnigt'}, 45:{emoji:'🌫️',desc:'Dimma'}, 51:{emoji:'🌧️',desc:'Duggregn'},
+  61:{emoji:'🌧️',desc:'Regn'}, 71:{emoji:'❄️',desc:'Snö'}, 95:{emoji:'⛈️',desc:'Åska'}
+};
+
+// --- HJÄLPFUNKTIONER ---
+function formatKey(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function parseKey(k) { const [y,m,d] = k.split('-'); return new Date(y, m-1, d); }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg; 
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// --- INITIERA EGNA TAGGAR & VANOR ---
+function renderHabitChips(selectedArray = []) {
+  const hCont = document.getElementById('habitsContainer');
+  if(!hCont) return;
+  hCont.innerHTML = [...defaultHabits, ...customHabits].map(h => {
+      const isSel = selectedArray.includes(h) ? 'selected' : '';
+      return `<button class="habit-chip ${isSel}" onclick="toggleHabit(this)">${h}</button>`;
+  }).join('') + `<button class="habit-chip" style="border:1.5px dashed var(--accent); background:transparent; color:var(--accent);" onclick="openCustomModal('habit')">+ Egen</button>`;
+}
+
+function renderTagChips(selectedArray = []) {
+  const tCont = document.getElementById('tagsContainer');
+  if(!tCont) return;
+  tCont.innerHTML = [...defaultTags, ...customTags].map(t => {
+      const isSel = selectedArray.includes(t) ? 'selected' : '';
+      return `<button class="tag-chip ${isSel}" onclick="toggleTag(this)">${t}</button>`;
+  }).join('') + `<button class="tag-chip" style="border:1.5px dashed var(--accent); background:transparent; color:var(--accent);" onclick="openCustomModal('tag')">+ Egen</button>`;
+}
+
+function openCustomModal(type) {
+  customAddType = type;
+  document.getElementById('customModalTitle').textContent = type === 'habit' ? 'Ny Vana' : 'Ny Aktivitet';
+  document.getElementById('customTagInput').value = '';
+  
+  if (type === 'habit') {
+    document.getElementById('emojiSection').style.display = 'block';
+    document.getElementById('noEmojiSection').style.display = 'none';
+    document.getElementById('customTagInput').placeholder = 'T.ex. Spela gitarr';
+    
+    const grid = document.getElementById('emojiPickerGrid');
+    grid.innerHTML = emojiList.map((e, i) => `<button class="emoji-btn ${i===0?'selected':''}" onclick="pickEmoji(this, '${e}')">${e}</button>`).join('');
+    selectedCustomEmoji = emojiList[0];
+  } else {
+    document.getElementById('emojiSection').style.display = 'none';
+    document.getElementById('noEmojiSection').style.display = 'block';
+    document.getElementById('customTagInput').placeholder = 'T.ex. Laga mat';
+  }
+  
+  document.getElementById('customTagModal').classList.add('active');
+}
+
+function closeCustomModal() {
+  document.getElementById('customTagModal').classList.remove('active');
+}
+
+function pickEmoji(btn, emoji) {
+  document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedCustomEmoji = emoji;
+}
+
+function saveCustomChip() {
+  let input = document.getElementById('customTagInput').value.trim();
+  if(!input) return;
+  
+  if(customAddType === 'habit') {
+    const val = `${selectedCustomEmoji} ${input}`;
+    if(!defaultHabits.includes(val) && !customHabits.includes(val)) {
+      customHabits.push(val);
+      localStorage.setItem('bullet_journal_custom_habits', JSON.stringify(customHabits));
+    }
+    const currentSel = Array.from(document.querySelectorAll('.habit-chip.selected')).map(c => c.textContent);
+    currentSel.push(val);
+    renderHabitChips(currentSel);
+  } else {
+    const val = input.charAt(0).toUpperCase() + input.slice(1);
+    if(!defaultTags.includes(val) && !customTags.includes(val)) {
+      customTags.push(val);
+      localStorage.setItem('bullet_journal_custom_tags', JSON.stringify(customTags));
+    }
+    const currentSel = Array.from(document.querySelectorAll('.tag-chip.selected')).map(c => c.textContent);
+    currentSel.push(val);
+    renderTagChips(currentSel);
+  }
+  
+  closeCustomModal();
+}
+
+// --- LADDAR IN DATA FRÅN INDEXEDDB ---
+async function loadData() {
+  let idbEntries = await idbGet('entries');
+  let idbBooks = await idbGet('books');
+  let idbIntentions = await idbGet('intentions');
+
+  // MIGRERING FRÅN GAMMAL LOCALSTORAGE TILL IDB (Första gången man öppnar denna version)
+  if (!idbEntries) {
+      const oldEntries = localStorage.getItem('bullet_journal_complete_v94');
+      entries = oldEntries ? JSON.parse(oldEntries) : {};
+      await idbSet('entries', entries);
+  } else { entries = idbEntries; }
+
+  if (!idbBooks) {
+      const oldBooks = localStorage.getItem('bullet_journal_books_v94');
+      books = oldBooks ? JSON.parse(oldBooks) : [];
+      await idbSet('books', books);
+  } else { books = idbBooks; }
+
+  if (!idbIntentions) {
+      const oldInt = localStorage.getItem('bullet_journal_intentions_v94');
+      monthIntentions = oldInt ? JSON.parse(oldInt) : {};
+      await idbSet('intentions', monthIntentions);
+  } else { monthIntentions = idbIntentions; }
+
+  // Rendera allt när datan är laddad
+  updateQuickWaterDisplay();
+  populateMonthFilter();
+  refreshActiveView();
+}
+
+// --- INITIALISERING ---
+window.addEventListener('DOMContentLoaded', () => {
+  const savedPin = localStorage.getItem(PIN_KEY);
+  if (savedPin) {
+    const pinEl = document.getElementById('pinOverlay');
+    if(pinEl) pinEl.style.display = 'flex';
+  }
+  
+  const titleEl = document.getElementById('pageTitle');
+  if(titleEl) titleEl.textContent = journalTitle;
+
+  const ts = document.getElementById('themeSlider');
+  if(ts) ts.value = currentThemeValue;
+  applyThemeSlider(currentThemeValue);
+  
+  if(customAccent) applyCustomColorFromPicker(customAccent, false);
+
+  renderHabitChips();
+  renderTagChips();
+  shuffleAffirmation();
+  shuffleActivitySuggestion();
+  initWeatherIP();
+  
+  // Startar asynkron laddning av gigabyte-minnet
+  loadData();
+});
+
+// --- FÄRGSLIDER & TEMA ---
+function hexToRgb(hex) {
+  let bigint = parseInt(hex.replace('#', ''), 16);
+  return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+}
+
+function applyThemeSlider(val) {
+  currentThemeValue = parseInt(val);
+  const root = document.documentElement;
+  
+  let activeTheme;
+  if (currentThemeValue === 0) activeTheme = themeDark;
+  else if (currentThemeValue === 50) activeTheme = themeMid;
+  else activeTheme = themeLight;
+
+  for (const key in activeTheme) {
+    let cssVar = '--' + key.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
+    root.style.setProperty(cssVar, activeTheme[key]);
+  }
+  
+  if (currentThemeValue === 100) {
+    root.style.setProperty('--ink', '#2b2030');
+    root.style.setProperty('--ink-secondary', '#5e4463');
+    root.style.setProperty('--ink-muted', '#806385');
+  } else {
+    root.style.setProperty('--ink', '#ffffff');
+    root.style.setProperty('--ink-secondary', '#ebd6fb');
+    root.style.setProperty('--ink-muted', '#b89ecc');
+  }
+  
+  localStorage.setItem(THEME_KEY, currentThemeValue);
+}
+
+function applyMoodTheme(mood) {
+  if(customAccent || currentThemeValue > 50) return; 
+  const cfg = moodConfig[mood];
+  if(!cfg) return;
+  const r = document.documentElement;
+  r.style.setProperty('--bg', cfg.bg); r.style.setProperty('--bg-elevated', cfg.elevated);
+  r.style.setProperty('--bg-card', cfg.card); r.style.setProperty('--bg-input', cfg.input);
+  r.style.setProperty('--border', cfg.border); r.style.setProperty('--accent', cfg.color);
+}
+
+function clearMoodTheme() {
+  const r = document.documentElement;
+  if(customAccent) applyCustomColorFromPicker(customAccent, false);
+  else r.style.removeProperty('--accent');
+  
+  applyThemeSlider(currentThemeValue); 
+}
+
+// --- CUSTOM RGB FÄRG MED SMART TEXT-KONTRAST ---
+function rgbToHex(r, g, b) {
+  return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1).toUpperCase();
+}
+
+function applyCustomColor(r, g, b, showMsg = true) {
+  r = Math.max(0, Math.min(255, parseInt(r) || 0));
+  g = Math.max(0, Math.min(255, parseInt(g) || 0));
+  b = Math.max(0, Math.min(255, parseInt(b) || 0));
+  
+  const hex = rgbToHex(r, g, b);
+  
+  const picker = document.getElementById('rgbColorPicker');
+  if(picker) picker.value = hex;
+  
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
+  const textColor = luminance > 128 ? '#1a1a1a' : '#ffffff';
+  
+  const root = document.documentElement;
+  root.style.setProperty('--accent', hex);
+  root.style.setProperty('--accent-glow', `rgba(${r}, ${g}, ${b}, 0.25)`);
+  root.style.setProperty('--accent-text', textColor); 
+  
+  localStorage.setItem('bullet_journal_custom_hex', hex);
+  customAccent = hex;
+  if(showMsg) showToast('Färg uppdaterad! ✨');
+}
+
+function applyCustomColorFromPicker(hex, showMsg = true) {
+  if(!/^#[0-9A-F]{3,6}$/i.test(hex)) return;
+  if(hex.length === 4) hex = '#' + hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3]; 
+  const rgb = hexToRgb(hex);
+  applyCustomColor(rgb[0], rgb[1], rgb[2], showMsg);
+}
+
+// --- SETTINGS MODAL ---
+function editTitle() {
+  const newTitle = prompt('Vad vill du kalla din journal?', journalTitle);
+  if(newTitle && newTitle.trim()) {
+    journalTitle = newTitle.trim();
+    document.getElementById('pageTitle').textContent = journalTitle;
+    localStorage.setItem(TITLE_KEY, journalTitle);
+    showToast('Titel uppdaterad! ✨');
+  }
+}
+
+function openSettings() { const el = document.getElementById('settingsOverlay'); if(el) el.classList.add('active'); }
+function closeSettings(e) { if(!e || e.target.id === 'settingsOverlay' || e.target.classList.contains('icon-btn')) { const el = document.getElementById('settingsOverlay'); if(el) el.classList.remove('active'); } }
+
+function checkPinCode(val) { if(val === localStorage.getItem(PIN_KEY)) { document.getElementById('pinOverlay').style.display = 'none'; document.getElementById('pinInput').value = ''; } }
+function savePinCode() { const p = document.getElementById('newPinInput').value; if(p.length === 4) { localStorage.setItem(PIN_KEY, p); showToast('PIN sparad! 🔒'); closeSettings(); } else { alert('Koden måste vara 4 siffror.'); } }
+function removePinCode() { localStorage.removeItem(PIN_KEY); showToast('PIN borttagen.'); closeSettings(); }
+
+function exportBackup() {
+  const data = { entries, books, journalTitle, monthIntentions, version: '95.0' };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `journal_backup_${formatKey(new Date())}.json`; a.click();
+  showToast('Backup exporterad! 📦');
+}
+
+async function importBackup(e) {
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async function(evt) {
+    try {
+      const data = JSON.parse(evt.target.result);
+      if(data.entries) { entries = data.entries; await idbSet('entries', entries); }
+      if(data.books) { books = data.books; await idbSet('books', books); }
+      if(data.journalTitle) { journalTitle = data.journalTitle; localStorage.setItem(TITLE_KEY, journalTitle); document.getElementById('pageTitle').textContent = journalTitle; }
+      if(data.monthIntentions) { monthIntentions = data.monthIntentions; await idbSet('intentions', monthIntentions); }
+      refreshActiveView(); showToast('Backup importerad! ✨'); closeSettings();
+    } catch(err) { alert('Kunde inte läsa filen. Kontrollera formatet.'); }
+  };
+  reader.readAsText(file);
+}
+
+// --- VERKTYG & EXTRAS ---
+function shuffleAffirmation() {
+  const idx = Math.floor(Math.random() * affirmations.length);
+  const el = document.getElementById('affirmationCard');
+  if(el) el.textContent = affirmations[idx];
+}
+
+function shuffleActivitySuggestion() {
+  const idx = Math.floor(Math.random() * activitySuggestions.length);
+  const el = document.getElementById('activitySuggestionText');
+  if(el) el.textContent = activitySuggestions[idx];
+}
+
+function showSelfCareTip() {
+  const randomTip = selfCareTips[Math.floor(Math.random() * selfCareTips.length)];
+  alert("💖 Dagens måbra-tips:\n\n" + randomTip);
+}
+
+function openSecretNotes() { const el = document.getElementById('secretNotesModal'); if(el) el.classList.add('active'); }
+function closeSecretNotes(e) { if(!e || e.target.id === 'secretNotesModal' || e.target.classList.contains('icon-btn')) { const el = document.getElementById('secretNotesModal'); if(el) el.classList.remove('active'); document.getElementById('secretNoteContent').style.display='none'; } }
+function showSecretNote(type) {
+  const el = document.getElementById('secretNoteContent');
+  if(el) { el.style.display = 'block'; el.innerHTML = `<b>Meddelande till dig:</b><br><br>${secretNotes[type]}`; }
+}
+
+// ANDNINGSÖVNING (ORB)
+function openBreathing() { 
+  const el = document.getElementById('breathOverlay'); 
+  if(el) el.classList.add('active'); 
+  const text = document.getElementById('breathText');
+  if(text) text.textContent = "Gör dig redo...";
+  setTimeout(runBreathSequence, 1500); 
+}
+
+function closeBreathing(e) { 
+  if(!e || e.target.id === 'breathOverlay' || e.target.classList.contains('btn')) { 
+    const el = document.getElementById('breathOverlay'); 
+    if(el) el.classList.remove('active'); 
+    breathTimeouts.forEach(t => clearTimeout(t)); 
+    breathTimeouts = []; 
+  } 
+}
+
+function runBreathSequence() {
+  breathTimeouts.forEach(t => clearTimeout(t)); 
+  breathTimeouts = [];
+  const orb = document.getElementById('breathOrb');
+  const text = document.getElementById('breathText');
+  if(!orb || !text) return;
+
+  orb.style.transition = 'none';
+  orb.style.transform = 'scale(1)';
+  orb.style.opacity = '0.3';
+  void orb.offsetWidth; 
+
+  orb.style.transition = 'all 4s ease-in-out';
+  text.textContent = "Andas in...";
+  orb.style.transform = "scale(2.5)";
+  orb.style.opacity = '0.9';
+
+  breathTimeouts.push(setTimeout(() => { text.textContent = "Håll..."; }, 4000));
+  breathTimeouts.push(setTimeout(() => { text.textContent = "Andas ut..."; orb.style.transform = "scale(1)"; orb.style.opacity = '0.3'; }, 8000));
+  breathTimeouts.push(setTimeout(() => { text.textContent = "Vila..."; }, 12000));
+  breathTimeouts.push(setTimeout(() => { if(document.getElementById('breathOverlay').classList.contains('active')) runBreathSequence(); }, 16000));
+}
+
+// Månadens intention
+async function editMonthIntention() {
+  const y = currentDate.getFullYear(), m = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const monthKey = `${y}-${m}`;
+  const currentInt = monthIntentions[monthKey] || '';
+  const newInt = prompt(`Sätt ett fokusord för denna månad:`, currentInt);
+  if(newInt !== null) {
+    monthIntentions[monthKey] = newInt.trim();
+    await idbSet('intentions', monthIntentions);
+    updateMonthIntentionDisplay();
+    showToast('Intention sparad! 🌸');
+  }
+}
+function updateMonthIntentionDisplay() {
+  const y = currentDate.getFullYear(), m = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const monthKey = `${y}-${m}`;
+  const disp = document.getElementById('monthIntentionDisplay');
+  if(disp) disp.textContent = monthIntentions[monthKey] || 'Sätt ett ord...';
+}
+
+// Vatten widget
+function updateQuickWaterDisplay() {
+  const todayKey = formatKey(new Date());
+  const ent = entries[todayKey] || {};
+  const glasses = ent.water || 0;
+  const el = document.getElementById('quickWaterDisplay');
+  if(el) el.textContent = `💧 Dagens vatten: ${glasses} glas`;
+}
+async function quickAddWater() {
+  const todayKey = formatKey(new Date());
+  if(!entries[todayKey]) entries[todayKey] = { water: 1 }; else entries[todayKey].water = (entries[todayKey].water || 0) + 1;
+  await idbSet('entries', entries); updateQuickWaterDisplay(); showToast('Ett glas vatten tillagt! 💧');
+}
+async function quickRemoveWater() {
+  const todayKey = formatKey(new Date());
+  if(entries[todayKey] && (entries[todayKey].water || 0) > 0) {
+    entries[todayKey].water -= 1; await idbSet('entries', entries); updateQuickWaterDisplay(); showToast('Ett glas vatten borttaget.');
+  }
+}
+
+// Väder
+function initWeatherIP() {
+  const savedLoc = JSON.parse(localStorage.getItem(LOCATION_KEY));
+  if (savedLoc) fetchWeatherCoords(savedLoc.lat, savedLoc.lon, savedLoc.name);
+  else fetch('https://ipapi.co/json/').then(r => r.json()).then(d => { if(d.latitude) { const l = {lat:d.latitude, lon:d.longitude, name:d.city||'Plats'}; localStorage.setItem(LOCATION_KEY, JSON.stringify(l)); fetchWeatherCoords(l.lat, l.lon, l.name); } else fetchWeatherCoords(57.7089, 11.9746, 'Göteborg'); }).catch(()=>fetchWeatherCoords(57.7089, 11.9746, 'Göteborg'));
+}
+function promptChangeLocation() {
+  const city = prompt("Vilken stad befinner du dig i?"); if(!city || !city.trim()) return;
+  fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city.trim())}&count=1&language=sv`).then(r => r.json()).then(d => {
+    if(d.results && d.results.length > 0) { const loc = d.results[0]; localStorage.setItem(LOCATION_KEY, JSON.stringify({lat:loc.latitude, lon:loc.longitude, name:loc.name})); fetchWeatherCoords(loc.latitude, loc.longitude, loc.name); showToast(`Plats ändrad till ${loc.name}!`); } else alert("Hittade inte platsen.");
+  }).catch(() => alert("Kunde inte söka."));
+}
+function fetchWeatherCoords(lat, lon, locName) {
+  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`).then(r => r.json()).then(d => {
+    if(d.current_weather) { const w = weatherMap[d.current_weather.weathercode] || {emoji:'🌡️', desc:'Väder'};
+      const e = document.getElementById('weatherEmoji'), t = document.getElementById('weatherTemp'), desc = document.getElementById('weatherDesc');
+      if(e) e.textContent = w.emoji; if(t) t.textContent = `${Math.round(d.current_weather.temperature)}°C`; if(desc) desc.textContent = `${w.desc} · ${locName}`;
+    }
+  }).catch(()=>{});
+}
+
+// --- KALENDER ---
+function jumpToDate(dateStr) { if(!dateStr) return; currentDate = new Date(dateStr); renderCalendar(); openModal(currentDate); }
+function changeMonth(dir) { currentDate.setMonth(currentDate.getMonth() + dir); renderCalendar(); }
+function checkForgetfulBanner() {
+  const todayKey = formatKey(new Date()); const banner = document.getElementById('gentleBanner');
+  if(banner) { if(!entries[todayKey]) banner.classList.remove('hidden'); else banner.classList.add('hidden'); }
+}
+function renderMemoryLane() {
+  const container = document.getElementById('memoryLaneContainer'); if(!container) return;
+  const today = new Date(), pastDate = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate()); const pastKey = formatKey(pastDate);
+  if(entries[pastKey]) { const ent = entries[pastKey], mc = ent.mood ? moodConfig[ent.mood] : null;
+    container.innerHTML = `<div class="memory-card" tabindex="0" aria-label="Ett minne från idag förra året" onclick="openModal(parseKey('${pastKey}'))"><div style="font-size:0.75rem; color:var(--accent); text-transform:uppercase; font-weight:bold;">🕰️ Minne från ett år sedan (${pastKey})</div><div style="font-size:0.85rem; margin-top:2px; color:var(--ink);">${mc ? mc.emoji + ' ' : ''} ${ent.note || ent.gratitude || 'Ett sparat minne.'}</div></div>`;
+  } else container.innerHTML = '';
+}
+function renderCalendar() {
+  const y = currentDate.getFullYear(), m = currentDate.getMonth(), monthNames = ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"];
+  const pill = document.getElementById('monthPill'); if(pill) pill.textContent = `${monthNames[m]} ${y}`;
+  updateMonthIntentionDisplay(); updateQuickWaterDisplay();
+  const grid = document.getElementById('calendarGrid'); if(!grid) return;
+  const first = new Date(y, m, 1), last = new Date(y, m+1, 0); let start = first.getDay() === 0 ? 6 : first.getDay()-1; let days = [];
+  for(let i = start-1; i>=0; i--) days.push({d: new Date(y,m,0).getDate()-i, cur:false, date: new Date(y, m-1, new Date(y,m,0).getDate()-i)});
+  for(let i = 1; i<=last.getDate(); i++) days.push({d:i, cur:true, date: new Date(y, m, i)});
+  while(days.length % 7 !== 0) days.push({d: days.length - start - last.getDate() + 1, cur:false, date: new Date(y, m+1, days.length - start - last.getDate() + 1)});
+  const todayKey = formatKey(new Date());
+  grid.innerHTML = days.map(day => {
+    const key = formatKey(day.date), ent = entries[key], mc = ent && ent.mood ? moodConfig[ent.mood] : null;
+    let cls = `cal-day ${day.cur?'':'other-month'} ${key===todayKey?'today':''} ${ent?'has-entry':''}`;
+    let line = mc ? `<div class="cal-mood-line" style="background:${mc.color}"></div>` : '';
+    let ariaLabel = day.cur ? `Den ${day.d} ${monthNames[m]}` : `Den ${day.d}`;
+    return `<div class="${cls}" tabindex="0" aria-label="${ariaLabel}" onclick="openModal(parseKey('${key}'))"><div class="cal-num">${day.d}</div>${line}</div>`;
+  }).join('');
+  checkForgetfulBanner(); renderMemoryLane();
+  if(entries[todayKey] && entries[todayKey].mood) applyMoodTheme(entries[todayKey].mood); else clearMoodTheme();
+}
+
+// --- MODAL & INLÄGG (DAGBOK) ---
+function selectMood(mood) {
+  if(selectedMood === mood) { selectedMood = null; document.querySelectorAll('.mood-card').forEach(m => {m.classList.remove('selected'); m.setAttribute('aria-checked', 'false')}); clearMoodTheme(); }
+  else { selectedMood = mood; document.querySelectorAll('.mood-card').forEach(m => {
+    const isSelected = m.dataset.mood === mood;
+    m.classList.toggle('selected', isSelected);
+    m.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+  }); applyMoodTheme(mood); }
+}
+function selectWeather(chip) { const val = chip.textContent.replace(/^[^\s]+\s/, ''); if(selectedWeather === val) { selectedWeather = null; chip.classList.remove('selected'); } else { document.querySelectorAll('.weather-chip').forEach(c => c.classList.remove('selected')); chip.classList.add('selected'); selectedWeather = val; } }
+function selectCycle(chip) { const val = chip.textContent.replace(/^[^\s]+\s/, ''); if(selectedCycle === val) { selectedCycle = null; chip.classList.remove('selected'); } else { document.querySelectorAll('.cycle-chip').forEach(c => c.classList.remove('selected')); chip.classList.add('selected'); selectedCycle = val; } }
+function toggleTag(chip) { chip.classList.toggle('selected'); }
+function toggleHabit(chip) { chip.classList.toggle('selected'); }
+
+function insertDailyPrompt() {
+  const p = dailyPrompts[Math.floor(Math.random() * dailyPrompts.length)], a = document.getElementById('noteInput'); if(!a) return;
+  let c = a.value.trim(); let f = false; dailyPrompts.forEach(dp => { if(c.includes(dp)) { c = c.replace(dp, p); f = true; } });
+  if(!f) a.value = c ? c + "\n\n" + p + "\n" : p + "\n"; else a.value = c; showToast('Fråga tillagd! ✨');
+}
+
+function addTodoItem() { const input = document.getElementById('todoInput'); if(!input) return; const val = input.value.trim(); if(!val) return; currentTodos.push({ text: val, done: false }); input.value = ''; renderTodoList(); }
+function toggleTodoItem(idx) { currentTodos[idx].done = !currentTodos[idx].done; renderTodoList(); }
+function deleteTodoItem(idx) { currentTodos.splice(idx, 1); renderTodoList(); }
+function renderTodoList() {
+  const c = document.getElementById('todoListContainer'); if(!c) return;
+  if(!currentTodos.length) { c.innerHTML = ``; return; }
+  c.innerHTML = currentTodos.map((item, idx) => `<div style="display:flex; align-items:center; justify-content:space-between; background:var(--bg-input); padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border); font-size:0.95rem; transition:0.2s;"><label style="display:flex; align-items:center; gap:10px; cursor:pointer; flex:1; text-decoration:${item.done ? 'line-through' : 'none'}; opacity:${item.done ? 0.6 : 1}; color:var(--ink); font-weight:500;"><input type="checkbox" style="width:18px;height:18px;accent-color:var(--accent);" ${item.done ? 'checked' : ''} onchange="toggleTodoItem(${idx})"> ${item.text}</label><button style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:1.2rem; display:flex; align-items:center;" aria-label="Ta bort mål" onclick="deleteTodoItem(${idx})">✕</button></div>`).join('');
+}
+
+function compressImage(file, cb) {
+  const r = new FileReader(); r.onload = function(e) { const img = new Image(); img.onload = function() { const canvas = document.createElement('canvas'); let w = img.width, h = img.height; const max = 800; if(w > h && w > max) { h *= max / w; w = max; } else if(h > max) { w *= max / h; h = max; } canvas.width = w; canvas.height = h; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, w, h); cb(canvas.toDataURL('image/jpeg', 0.7)); }; img.src = e.target.result; }; r.readAsDataURL(file);
+}
+function handlePhotoUpload(e) { const f = e.target.files; if(!f || !f.length) return; Array.from(f).forEach(file => compressImage(file, u => { currentPhotos.push(u); renderPhotoPreviews(); })); e.target.value = ''; }
+function renderPhotoPreviews() { const c = document.getElementById('photoPreviewContainer'); if(!c) return; if(!currentPhotos.length) { c.innerHTML = ''; return; } c.innerHTML = currentPhotos.map((p, i) => `<div style="position:relative; width:65px; height:65px; border-radius:8px; overflow:hidden; border:1px solid var(--border);"><img src="${p}" style="width:100%; height:100%; object-fit:cover;" loading="lazy" alt="Bifogad bild"><button onclick="removePhoto(${i})" aria-label="Ta bort bild" style="position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.8); color:#fff; border:none; border-radius:50%; width:20px; height:20px; font-size:10px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button></div>`).join(''); }
+function removePhoto(idx) { currentPhotos.splice(idx, 1); renderPhotoPreviews(); }
+
+function toggleRecording() {
+  const btn = document.getElementById('recordAudioBtn'); if(!btn) return;
+  if(mediaRecorder && mediaRecorder.state === 'recording') { mediaRecorder.stop(); btn.textContent = '🎙️ Spela in'; btn.style.background = 'var(--bg-input)'; btn.style.color = 'var(--ink)'; }
+  else { navigator.mediaDevices.getUserMedia({ audio: true }).then(s => { mediaRecorder = new MediaRecorder(s); audioChunks = []; mediaRecorder.ondataavailable = e => audioChunks.push(e.data); mediaRecorder.onstop = () => { const r = new FileReader(); r.onload = ev => { currentAudio = ev.target.result; renderAudioPlayer(); }; r.readAsDataURL(new Blob(audioChunks, { type: 'audio/webm' })); }; mediaRecorder.start(); btn.textContent = '⏹️ Stoppa'; btn.style.background = 'var(--accent)'; btn.style.color = 'var(--accent-text)'; }).catch(() => alert('Mikrofon ej tillgänglig.')); }
+}
+function renderAudioPlayer() { const p = document.getElementById('audioPlayback'), d = document.getElementById('deleteAudioBtn'); if(!p || !d) return; if(currentAudio) { p.src = currentAudio; p.style.display = 'block'; d.style.display = 'block'; } else { p.style.display = 'none'; d.style.display = 'none'; p.src = ''; } }
+function deleteAudio() { currentAudio = null; renderAudioPlayer(); }
+
+function openModal(date) {
+  selectedDateKey = formatKey(date); const ent = entries[selectedDateKey] || {};
+  selectedMood = ent.mood || null; selectedWeather = ent.weather || null; selectedCycle = ent.cycle || null;
+  currentTodos = ent.todos ? [...ent.todos] : []; currentPhotos = ent.photos ? [...ent.photos] : (ent.photo ? [ent.photo] : []); currentAudio = ent.audio || null;
+  
+  const setVal = (id, v) => { const el = document.getElementById(id); if(el) el.value = v; };
+  const setText = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
+  setText('modalDate', date.toLocaleDateString('sv',{weekday:'long', month:'long', day:'numeric'}));
+  setVal('jumpDateInput', selectedDateKey); setVal('songInput', ent.song || ''); setVal('noteInput', ent.note || ''); setVal('gratitudeInput', ent.gratitude || ''); setVal('dreamInput', ent.dream || ''); setVal('foodInput', ent.food || '');
+  setVal('sleepInput', ent.sleep!==undefined?ent.sleep:8); setText('sleepVal', ent.sleep!==undefined?ent.sleep:8);
+  setVal('waterInput', ent.water!==undefined?ent.water:4); setText('waterVal', ent.water!==undefined?ent.water:4);
+  setVal('energyInput', ent.energy!==undefined?ent.energy:3); setText('energyVal', ent.energy!==undefined?ent.energy:3);
+  setVal('stressInput', ent.stress!==undefined?ent.stress:2); setText('stressVal', ent.stress!==undefined?ent.stress:2);
+
+  document.querySelectorAll('.mood-card').forEach(m => {
+    const isSelected = m.dataset.mood === selectedMood;
+    m.classList.toggle('selected', isSelected);
+    m.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+  });
+  document.querySelectorAll('.weather-chip').forEach(c => c.classList.toggle('selected', c.textContent.replace(/^[^\s]+\s/, '') === selectedWeather));
+  document.querySelectorAll('.cycle-chip').forEach(c => c.classList.toggle('selected', c.textContent.replace(/^[^\s]+\s/, '') === selectedCycle));
+  
+  renderHabitChips(ent.habits || []);
+  renderTagChips(ent.tags || []);
+
+  renderTodoList(); renderPhotoPreviews(); renderAudioPlayer();
+  if(selectedMood) applyMoodTheme(selectedMood); else clearMoodTheme();
+  document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeModal(e) { if(!e || e.target.id === 'modalOverlay' || e.target.classList.contains('icon-btn')) { document.getElementById('modalOverlay').classList.remove('active'); const k = formatKey(new Date()); if(activeView==='calendar' && entries[k] && entries[k].mood) applyMoodTheme(entries[k].mood); else if(activeView==='calendar') clearMoodTheme(); } }
+
+async function saveEntry() {
+  const note = document.getElementById('noteInput').value.trim(), gratitude = document.getElementById('gratitudeInput').value.trim(), song = document.getElementById('songInput').value.trim(), dream = document.getElementById('dreamInput').value.trim(), food = document.getElementById('foodInput').value.trim();
+  const sleep = parseFloat(document.getElementById('sleepInput').value), water = parseInt(document.getElementById('waterInput').value), energy = parseInt(document.getElementById('energyInput').value), stress = parseInt(document.getElementById('stressInput').value);
+  
+  const tags = [], habits = []; 
+  document.querySelectorAll('#tagsContainer .tag-chip.selected').forEach(c => { if(c.textContent !== '+ Egen') tags.push(c.textContent); }); 
+  document.querySelectorAll('#habitsContainer .habit-chip.selected').forEach(c => { if(c.textContent !== '+ Egen') habits.push(c.textContent); });
+
+  if(!note && !selectedMood && !gratitude && !song && !dream && !food && tags.length===0 && habits.length===0 && currentPhotos.length===0 && !currentAudio && !selectedWeather && !selectedCycle && currentTodos.length===0) {
+    delete entries[selectedDateKey];
+  } else {
+    entries[selectedDateKey] = { note, gratitude, song, dream, food, mood: selectedMood, sleep, water, energy, stress, tags, habits, photos: currentPhotos, audio: currentAudio, weather: selectedWeather, cycle: selectedCycle, todos: currentTodos };
+  }
+  await idbSet('entries', entries); closeModal(); refreshActiveView(); showToast('Dagen sparad! 🌿');
+}
+
+async function deleteEntry() { delete entries[selectedDateKey]; await idbSet('entries', entries); closeModal(); refreshActiveView(); showToast('Raderat'); }
+
+// --- SCRAPBOOK ---
+function debouncedSearch(q, m) { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => renderScrapbook(q, m), 200); }
+function populateMonthFilter() {
+  const sel = document.getElementById('monthFilterSelect'); if(!sel) return;
+  let s = new Set(); Object.keys(entries).forEach(k => s.add(k.substring(0,7)));
+  let v = sel.value; sel.innerHTML = '<option value="">Alla månader</option>' + Array.from(s).sort().reverse().map(m => `<option value="${m}">${new Date(m.split('-')[0], m.split('-')[1]-1).toLocaleString('sv',{month:'long',year:'numeric'})}</option>`).join(''); sel.value = v;
+}
+function renderScrapbook(q='', mF='') {
+  const c = document.getElementById('scrapbookContainer'); if(!c) return;
+  let keys = Object.keys(entries).sort((a,b) => new Date(b) - new Date(a));
+  if(mF) keys = keys.filter(k => k.startsWith(mF));
+  if(q) { const Q = q.toLowerCase(); keys = keys.filter(k => { const e = entries[k]; return (e.note&&e.note.toLowerCase().includes(Q)) || (e.gratitude&&e.gratitude.toLowerCase().includes(Q)) || (e.song&&e.song.toLowerCase().includes(Q)) || (e.dream&&e.dream.toLowerCase().includes(Q)) || (e.food&&e.food.toLowerCase().includes(Q)) || (e.tags&&e.tags.some(t=>t.toLowerCase().includes(Q))) || (e.habits&&e.habits.some(h=>h.toLowerCase().includes(Q))); }); }
+  if(!keys.length) { c.innerHTML = `<div style="text-align:center;color:var(--ink-secondary);padding:40px;">Inga inlägg hittades. ✨</div>`; return; }
+  
+  c.innerHTML = keys.map(k => {
+    const e = entries[k], mc = e.mood ? moodConfig[e.mood] : null;
+    let tHtml = e.todos&&e.todos.length ? `<div style="display:flex;flex-direction:column;gap:2px;margin-top:4px;font-size:0.8rem;"><b>Mål:</b>` + e.todos.map(t=>`<span style="text-decoration:${t.done?'line-through':'none'};opacity:${t.done?.6:1}">✓ ${t.text}</span>`).join('') + `</div>` : '';
+    let pHtml = e.photos&&e.photos.length ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">`+e.photos.map(p=>`<img src="${p}" style="width:75px;height:75px;object-fit:cover;border-radius:6px;border:1px solid var(--border);" loading="lazy" alt="Sparat minne">`).join('')+`</div>` : '';
+    
+    return `
+      <div class="scrapbook-card" tabindex="0" aria-label="Läs inlägg från ${k}" onclick="openModal(parseKey('${k}'))">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.85rem;color:var(--ink-secondary);font-weight:600;">
+          <span>📅 ${new Date(k).toLocaleDateString('sv',{weekday:'short', year:'numeric', month:'short', day:'numeric'})} ${e.weather?'• '+e.weather:''} ${e.cycle?'• '+e.cycle:''}</span>
+          <span aria-hidden="true">${mc?mc.emoji+' '+mc.name:''}</span>
+        </div>
+        ${e.song ? `<div style="font-size:0.9rem;color:var(--ink-secondary);">🎵 ${e.song}</div>`:''}
+        ${e.dream ? `<div style="font-size:0.9rem;color:#c084fc;">☁️ ${e.dream}</div>`:''}
+        ${e.food ? `<div style="font-size:0.9rem;color:#fbbf24;">🍲 ${e.food}</div>`:''}
+        ${e.gratitude ? `<div style="font-size:0.95rem;color:var(--accent);font-weight:600;">✨ ${e.gratitude}</div>`:''}
+        ${e.note ? `<div style="font-size:0.95rem;line-height:1.6;color:var(--ink);">${e.note}</div>`:''}
+        ${tHtml}${pHtml}
+        ${e.audio ? `<audio controls src="${e.audio}" style="width:100%;height:34px;margin-top:6px;" onclick="event.stopPropagation()"></audio>`:''}
+        <div style="font-size:0.8rem;color:var(--ink-secondary);display:flex;gap:10px;flex-wrap:wrap;font-weight:500;margin-top:4px;">
+          ${e.sleep?`<span>🛏️ ${e.sleep}h</span>`:''}${e.water?`<span>💧 ${(e.water*.25).toFixed(1)}L</span>`:''}${e.energy?`<span>⚡ ${e.energy}/5</span>`:''}${e.stress?`<span>🌊 ${e.stress}/5</span>`:''}
+        </div>
+        ${e.habits&&e.habits.length ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">${e.habits.map(h=>`<span style="font-size:0.75rem;background:var(--bg-input);color:var(--accent-text);padding:3px 8px;border-radius:8px;font-weight:600;">✓ ${h}</span>`).join('')}</div>`:''}
+      </div>`;
+  }).join('');
+}
+
+// --- BÖCKER ---
+function openBookModal() { 
+  const el = document.getElementById('bookModalOverlay'); 
+  if(el) el.classList.add('active'); 
+  document.getElementById('bookTitleInput').value = '';
+  document.getElementById('bookAuthorInput').value = '';
+  document.getElementById('bookReviewInput').value = '';
+  setBookStatus('toread');
+  setBookRating(0);
+}
+
+function closeBookModal(e) { if(!e || e.target.id === 'bookModalOverlay' || e.target.classList.contains('icon-btn')) { const el = document.getElementById('bookModalOverlay'); if(el) el.classList.remove('active'); } }
+
+function setBookStatus(st) { 
+  currentBookStatus = st; 
+  const tBtn = document.getElementById('statusToReadBtn');
+  const rBtn = document.getElementById('statusReadingBtn');
+  const dBtn = document.getElementById('statusReadBtn');
+  
+  if(tBtn) { tBtn.style.background = st==='toread'?'var(--accent)':'var(--bg-input)'; tBtn.style.color = st==='toread'?'var(--accent-text)':'var(--ink)'; tBtn.setAttribute('aria-pressed', st === 'toread' ? 'true' : 'false'); }
+  if(rBtn) { rBtn.style.background = st==='reading'?'var(--accent)':'var(--bg-input)'; rBtn.style.color = st==='reading'?'var(--accent-text)':'var(--ink)'; rBtn.setAttribute('aria-pressed', st === 'reading' ? 'true' : 'false'); }
+  if(dBtn) { dBtn.style.background = st==='read'?'var(--accent)':'var(--bg-input)'; dBtn.style.color = st==='read'?'var(--accent-text)':'var(--ink)'; dBtn.setAttribute('aria-pressed', st === 'read' ? 'true' : 'false'); }
+}
+
+function setBookRating(val) {
+  if(currentBookRating === val) currentBookRating = 0;
+  else currentBookRating = val;
+  
+  const stars = document.querySelectorAll('#bookRatingContainer .star');
+  stars.forEach((s, idx) => {
+    if(idx < currentBookRating) {
+      s.style.color = '#f59e0b';
+      s.style.textShadow = '0 0 10px rgba(245,158,11,0.4)';
+    } else {
+      s.style.color = 'var(--border)';
+      s.style.textShadow = 'none';
+    }
+  });
+}
+
+async function saveBook() { 
+  const t = document.getElementById('bookTitleInput').value.trim();
+  const a = document.getElementById('bookAuthorInput').value.trim();
+  const rev = document.getElementById('bookReviewInput').value.trim();
+  if(!t) return alert('Ange titel.'); 
+  
+  books.push({id:Date.now(), title:t, author:a, status:currentBookStatus, rating:currentBookRating, review:rev}); 
+  await idbSet('books', books); 
+  closeBookModal(); 
+  renderBooks(); 
+  showToast('Bok sparad!'); 
+}
+
+async function deleteBook(id) { books = books.filter(b=>b.id!==id); await idbSet('books', books); renderBooks(); showToast('Bok raderad'); }
+
+function renderBooks() {
+  const c = document.getElementById('booksContainer'); if(!c) return;
+  if(!books.length) { c.innerHTML = `<div style="text-align:center;color:var(--ink-secondary);padding:30px;">Inga böcker än. 📖</div>`; return; }
+  
+  c.innerHTML = books.map(b => {
+    let sHtml = '';
+    if (b.rating > 0) {
+        const filled = '★'.repeat(Number(b.rating));
+        const empty = '☆'.repeat(5 - Number(b.rating));
+        sHtml = `<div style="font-size:1.4rem;letter-spacing:3px;padding-bottom:6px;" aria-hidden="true"><span style="color:#f59e0b;text-shadow:0 0 10px rgba(245,158,11,0.3);">${filled}</span><span style="color:var(--border);">${empty}</span></div>`;
+    } else if (b.status === 'read') {
+        sHtml = `<div style="font-size:0.85rem;color:var(--ink-muted);padding-bottom:6px;font-style:italic;">Inget betyg satt</div>`;
+    }
+
+    let statusBadge = '';
+    let statusColor = 'var(--accent)';
+    if(b.status === 'toread') { statusBadge = '📌 Ska läsa'; statusColor = '#60a5fa'; } 
+    else if(b.status === 'reading') { statusBadge = '📖 Läser'; statusColor = '#fbbf24'; } 
+    else { statusBadge = '✅ Läst'; statusColor = '#34d399'; }
+
+    return `
+      <div class="book-card" tabindex="0" aria-label="Bok: ${b.title} av ${b.author||'Okänd'}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+          <div style="flex:1;">
+            <div style="font-weight:bold;font-size:1.1rem;color:var(--ink);line-height:1.3;">${b.title}</div>
+            <div style="font-size:0.85rem;color:var(--ink-secondary);margin-top:2px;">av ${b.author||'Okänd'}</div>
+          </div>
+          <span style="font-size:0.75rem;background:var(--bg-input);padding:5px 12px;border-radius:12px;color:${statusColor};font-weight:700;border:1px solid ${statusColor}40;white-space:nowrap;">${statusBadge}</span>
+        </div>
+        ${sHtml}
+        ${b.review ? `<div style="font-size:0.9rem;line-height:1.5;color:var(--ink);background:var(--bg-input);padding:10px 14px;border-radius:10px;margin-top:4px;">${b.review}</div>` : ''}
+        <div style="text-align:right; margin-top:6px;">
+          <button class="btn" style="background:none;color:#ef4444;font-size:0.8rem;padding:0;width:auto;" aria-label="Ta bort bok" onclick="deleteBook(${b.id})">Ta bort</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// --- GALLERI & PIXLAR ---
+function renderGallery() {
+  const c = document.getElementById('galleryContainer'); if(!c) return;
+  let pArr = []; Object.keys(entries).sort((a,b)=>new Date(b)-new Date(a)).forEach(k => { if(entries[k].photos) entries[k].photos.forEach(p=>pArr.push({k,p})); });
+  if(!pArr.length) { c.innerHTML = `<div style="text-align:center;color:var(--ink-secondary);padding:30px;grid-column:1/-1;">Inga bilder än. 📸</div>`; return; }
+  c.innerHTML = pArr.map(x => `<div class="gallery-item" tabindex="0" aria-label="Visa inlägg från ${x.k}" onclick="openModal(parseKey('${x.k}'))"><img src="${x.p}" loading="lazy" alt="Sparad bild"></div>`).join('');
+}
+
+function renderPixels() {
+  const c = document.getElementById('pixelsContainer'); if(!c) return;
+  const y = currentDate.getFullYear(), mos = ['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December'];
+  let html = `<div class="pixel-legend"><div class="legend-item"><div class="legend-dot" style="background:#fb7185"></div>Glad</div><div class="legend-item"><div class="legend-dot" style="background:#c084fc"></div>Lugn</div><div class="legend-item"><div class="legend-dot" style="background:#e879f9"></div>Fokus</div><div class="legend-item"><div class="legend-dot" style="background:#fbbf24"></div>Trött</div><div class="legend-item"><div class="legend-dot" style="background:#60a5fa"></div>Ledsen</div><div class="legend-item"><div class="legend-dot" style="background:#f472b6"></div>Meh</div></div>`;
+  mos.forEach((mn, mIdx) => {
+    let dC = new Date(y, mIdx+1, 0).getDate(), cHtml = '';
+    for(let d=1; d<=dC; d++) {
+      const ds = `${y}-${String(mIdx+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const e = entries[ds], col = (e&&e.mood&&moodConfig[e.mood]) ? moodConfig[e.mood].color : 'var(--bg-input)';
+      cHtml += `<div class="pixel-cell" style="background-color:${col};" tabindex="0" aria-label="Visa inlägg från ${d} ${mn}" onclick="openModal(parseKey('${ds}'))">${d}</div>`;
+    }
+    html += `<div class="pixel-month-card"><div class="pixel-month-header">${mn} ${y}</div><div class="pixel-grid-month">${cHtml}</div></div>`;
+  }); c.innerHTML = html;
+}
+
+// --- STATISTIK & INSIKTER ---
+function drawGratitudeJar() {
+  const gk = Object.keys(entries).filter(k => entries[k].gratitude), el = document.getElementById('gratitudeJarText'); if(!el) return;
+  if(!gk.length) { el.textContent = "Burken är tom än! Spara lite tacksamhet först."; return; }
+  const rk = gk[Math.floor(Math.random() * gk.length)];
+  el.innerHTML = `✨ <em>"${entries[rk].gratitude}"</em> <span style="display:block;font-size:0.75rem;color:var(--ink-secondary);margin-top:2px;">(${rk})</span>`;
+}
+function calculateStreaks() {
+  const hN = [...defaultHabits, ...customHabits]; 
+  let res = "";
+  hN.forEach(h => {
+    let s=0, d=new Date();
+    while(true) {
+      const k=formatKey(d); if(entries[k]&&entries[k].habits&&entries[k].habits.includes(h)) { s++; d.setDate(d.getDate()-1); }
+      else { if(s===0 && k===formatKey(new Date())) { d.setDate(d.getDate()-1); continue; } break; }
+    } res += `• ${h}: <b style="color:var(--accent);">${s} dagar</b><br>`;
+  }); return res;
+}
+function calculateTagStats() {
+  let c={}; Object.values(entries).forEach(e => { if(e.tags) e.tags.forEach(t => c[t]=(c[t]||0)+1); });
+  let s = Object.entries(c).sort((a,b)=>b[1]-a[1]); if(!s.length) return "Inga aktiviteter än.";
+  return s.slice(0,5).map(i=>`• ${i[0]}: <b style="color:var(--accent);">${i[1]} ggr</b>`).join('<br>');
+}
+function renderStats() {
+  const k = Object.keys(entries); 
+  const statTotal = document.getElementById('statTotal'); if(statTotal) statTotal.textContent = k.length;
+  
+  let tS=0, sC=0, mC={happy:0,calm:0,productive:0,tired:0,sad:0,meh:0}, cM=[];
+  const pfx = `${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}`;
+  k.forEach(x=>{ const e=entries[x]; if(e.sleep!==undefined){tS+=e.sleep;sC++;} if(e.mood&&mC[e.mood]!==undefined){mC[e.mood]++; if(x.startsWith(pfx)) cM.push(e.mood);} });
+  
+  const statSleep = document.getElementById('statSleep'); if(statSleep) statSleep.textContent = sC>0?(tS/sC).toFixed(1)+' h':'-';
+  const strEl = document.getElementById('streakText'); if(strEl) strEl.innerHTML = calculateStreaks();
+  const tagEl = document.getElementById('tagStatsText'); if(tagEl) tagEl.innerHTML = calculateTagStats();
+  
+  const sumEl = document.getElementById('monthlySummaryText');
+  if(sumEl) { if(cM.length>0) sumEl.innerHTML=`Denna månad har du loggat <b>${cM.length} dagar</b>. Snittsömn <b>${sC>0?(tS/sC).toFixed(1):'-'}h</b>. Bra jobbat! 🌱`; else sumEl.innerHTML=`Inga inlägg denna månad än.`; }
+  
+  const max = Math.max(...Object.values(mC), 1), mCont = document.getElementById('moodTrackerStats');
+  if(mCont) mCont.innerHTML = Object.keys(mC).map(m=>{ const c=moodConfig[m], n=mC[m], p=(n/max)*100; return `<div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:4px;font-weight:500;"><span>${c.emoji} ${c.name}</span><span style="font-weight:bold;color:${c.color};">${n} dgr</span></div><div class="mood-stat-bar-bg"><div class="mood-stat-bar-fill" style="width:${p}%;background:${c.color};"></div></div>`;}).join('');
+}
+
+// --- NAVIGERING ---
+function switchView(view, btn) {
+  activeView = view;
+  document.querySelectorAll('.view-section').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.bottom-nav-item').forEach(e => e.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const hp = document.getElementById('calendarHeaderPills');
+  
+  if(view==='calendar') { document.getElementById('calendarView').classList.add('active'); if(hp) hp.style.display='flex'; renderCalendar(); }
+  else if(view==='scrapbook') { document.getElementById('scrapbookView').classList.add('active'); if(hp) hp.style.display='none'; populateMonthFilter(); renderScrapbook(); }
+  else if(view==='books') { document.getElementById('booksView').classList.add('active'); if(hp) hp.style.display='none'; renderBooks(); }
+  else if(view==='gallery') { document.getElementById('galleryView').classList.add('active'); if(hp) hp.style.display='none'; renderGallery(); }
+  else if(view==='pixels') { document.getElementById('pixelsView').classList.add('active'); if(hp) hp.style.display='none'; renderPixels(); }
+  else if(view==='stats') { document.getElementById('statsView').classList.add('active'); if(hp) hp.style.display='none'; renderStats(); }
+}
+
+function refreshActiveView() {
+  if(activeView==='calendar') renderCalendar();
+  else if(activeView==='scrapbook') renderScrapbook(document.getElementById('searchInput') ? document.getElementById('searchInput').value : '', document.getElementById('monthFilterSelect') ? document.getElementById('monthFilterSelect').value : '');
+  else if(activeView==='books') renderBooks();
+  else if(activeView==='gallery') renderGallery();
+  else if(activeView==='pixels') renderPixels();
+  else if(activeView==='stats') renderStats();
+}
+</script>
+</body>
+</html>
