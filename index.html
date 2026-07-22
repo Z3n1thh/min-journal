@@ -183,7 +183,7 @@ input, textarea, select { font-size: 16px !important; }
 .btn{flex:1; padding:14px; border-radius:var(--radius-sm); border:none; color:var(--ink); font-weight:700; cursor:pointer; text-align:center; font-size:0.95rem; transition: background-color 0.2s, color 0.2s;}
 .btn-primary{background:var(--accent) !important; color:var(--accent-text) !important;}
 
-/* Tema Slider */
+/* Tema Slider: 3 fasta steg */
 .theme-slider-container { display:flex; gap:12px; align-items:center; margin-bottom:20px; background:var(--bg-input); padding:10px 16px; border-radius:var(--radius-sm); border:1px solid var(--border); transition: background-color 0.3s ease; }
 .theme-slider { -webkit-appearance:none; height:8px; background:linear-gradient(to right, #131018, #3a324c, #fcfbfa); border-radius:10px; cursor:pointer; flex:1; outline:none; }
 .theme-slider::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--accent); border:2px solid #fff; box-shadow:0 0 5px rgba(0,0,0,0.5); }
@@ -469,44 +469,6 @@ input, textarea, select { font-size: 16px !important; }
   </nav>
 </div>
 
-<!-- Modal: Lägg till Bok -->
-<div class="modal-overlay" id="bookModalOverlay" onclick="closeBookModal(event)">
-  <div class="modal-sheet" style="max-width:400px; padding:24px;" onclick="event.stopPropagation()">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <h3 style="font-size:1.3rem; font-weight:800;">📚 Lägg till bok</h3>
-      <button class="icon-btn" onclick="closeBookModal()" aria-label="Avbryt">✕</button>
-    </div>
-    
-    <div class="section-label">Boktitel</div>
-    <input type="text" class="book-input" id="bookTitleInput" placeholder="T.ex. Själarnas tillflykt" aria-label="Bokens titel">
-    
-    <div class="section-label">Författare</div>
-    <input type="text" class="book-input" id="bookAuthorInput" placeholder="T.ex. Nora Roberts" aria-label="Bokens författare">
-    
-    <div class="section-label">Status</div>
-    <div class="book-status-row">
-      <button class="book-status-btn selected" data-status="toread" onclick="setBookStatus('toread')" aria-pressed="true">📌 Ska läsa</button>
-      <button class="book-status-btn" data-status="reading" onclick="setBookStatus('reading')" aria-pressed="false">📖 Läser nu</button>
-      <button class="book-status-btn" data-status="read" onclick="setBookStatus('read')" aria-pressed="false">✅ Färdigläst</button>
-    </div>
-    
-    <!-- INTERAKTIVT STJÄRNSYSTEM -->
-    <div class="section-label">Betyg</div>
-    <div class="book-rating-container" id="bookRatingContainer">
-      <span class="star" onclick="setBookRating(1)" aria-label="1 stjärna" role="button">★</span>
-      <span class="star" onclick="setBookRating(2)" aria-label="2 stjärnor" role="button">★</span>
-      <span class="star" onclick="setBookRating(3)" aria-label="3 stjärnor" role="button">★</span>
-      <span class="star" onclick="setBookRating(4)" aria-label="4 stjärnor" role="button">★</span>
-      <span class="star" onclick="setBookRating(5)" aria-label="5 stjärnor" role="button">★</span>
-    </div>
-    
-    <div class="section-label">Kort tanke / recension</div>
-    <textarea class="book-textarea" id="bookReviewInput" placeholder="Vad tyckte du om boken? (Frivilligt)" aria-label="Bokens recension"></textarea>
-    
-    <button class="book-save-btn" onclick="saveBook()">Spara bok</button>
-  </div>
-</div>
-
 <!-- Modal: Inställningar -->
 <div class="modal-overlay" id="settingsOverlay" onclick="closeSettings(event)">
   <div class="modal-sheet" style="max-width:400px;" onclick="event.stopPropagation()">
@@ -535,7 +497,6 @@ input, textarea, select { font-size: 16px !important; }
         <label class="rgb-circle-picker" title="Välj en egen färg från hjulet" aria-label="Öppna färgväljare">
           <input type="color" id="rgbColorPicker" oninput="applyCustomColorFromPicker(this.value, false)" onchange="applyCustomColorFromPicker(this.value, true)">
         </label>
-        <input type="text" id="rgbTextInput" placeholder="R, G, B" maxlength="15" style="width:90px; font-size:0.9rem; border:none; background:transparent; color:var(--ink); outline:none; font-family:monospace; font-weight:bold; text-align:center;" aria-label="Skriv in RGB kod" onchange="applyCustomColorFromText(this.value)">
       </div>
     </div>
 
@@ -711,37 +672,52 @@ window.addEventListener('beforeinstallprompt', (e) => {
   }
 });
 
-// --- DATABAS & STATE (v94) ---
-const STORAGE_KEY = 'bullet_journal_complete_v94';
-const TITLE_KEY = 'bullet_journal_title_v94';
-const PIN_KEY = 'bullet_journal_pin_v94';
-const ACCENT_KEY = 'bullet_journal_accent_v94';
-const THEME_KEY = 'bullet_journal_theme_v94';
-const INTENTION_KEY = 'bullet_journal_intentions_v94';
-const LOCATION_KEY = 'bullet_journal_location_v94';
-const BOOKS_KEY = 'bullet_journal_books_v94';
+// --- DATABAS & INDEXEDDB (v95) LÖSER 5MB GRÄNSEN ---
+const TITLE_KEY = 'bullet_journal_title_v95';
+const PIN_KEY = 'bullet_journal_pin_v95';
+const ACCENT_KEY = 'bullet_journal_accent_v95';
+const THEME_KEY = 'bullet_journal_theme_v95';
+const LOCATION_KEY = 'bullet_journal_location_v95';
 
 let entries = {};
 let books = [];
 let monthIntentions = {};
 
-try { 
-  entries = JSON.parse(localStorage.getItem(STORAGE_KEY)); 
-  if(!entries) {
-    entries = JSON.parse(localStorage.getItem('bullet_journal_complete_v93')) || JSON.parse(localStorage.getItem('bullet_journal_complete_v92')) || {};
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-  }
-} catch(e) { entries = {}; }
+const dbPromise = new Promise((resolve, reject) => {
+    const req = indexedDB.open('BulletJournalDB', 1);
+    req.onupgradeneeded = e => {
+        const db = e.target.result;
+        if(!db.objectStoreNames.contains('store')) db.createObjectStore('store');
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+});
 
-try { 
-  books = JSON.parse(localStorage.getItem(BOOKS_KEY));
-  if(!books) {
-    books = JSON.parse(localStorage.getItem('bullet_journal_books_v93')) || JSON.parse(localStorage.getItem('bullet_journal_books_v92')) || [];
-    localStorage.setItem(BOOKS_KEY, JSON.stringify(books));
-  }
-} catch(e) { books = []; }
+async function idbGet(key) {
+    const db = await dbPromise;
+    return new Promise(resolve => {
+        const tx = db.transaction('store', 'readonly');
+        const req = tx.objectStore('store').get(key);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => resolve(null);
+    });
+}
 
-try { monthIntentions = JSON.parse(localStorage.getItem(INTENTION_KEY)) || {}; } catch(e) { monthIntentions = {}; }
+async function idbSet(key, val) {
+    const db = await dbPromise;
+    return new Promise(resolve => {
+        const tx = db.transaction('store', 'readwrite');
+        tx.objectStore('store').put(val, key);
+        tx.oncomplete = () => resolve();
+    });
+}
+
+// Beder mobilen att spara data permanent
+if (navigator.storage && navigator.storage.persist) {
+  navigator.storage.persist().then(persistent => {
+    if(persistent) console.log("Lagring säkrad mot automatisk rensning.");
+  });
+}
 
 let journalTitle = localStorage.getItem(TITLE_KEY) || 'Min Välmående-Journal';
 let customAccent = localStorage.getItem('bullet_journal_custom_hex') || localStorage.getItem(ACCENT_KEY) || null;
@@ -943,6 +919,37 @@ function saveCustomChip() {
   closeCustomModal();
 }
 
+// --- LADDAR IN DATA FRÅN INDEXEDDB ---
+async function loadData() {
+  let idbEntries = await idbGet('entries');
+  let idbBooks = await idbGet('books');
+  let idbIntentions = await idbGet('intentions');
+
+  // MIGRERING FRÅN GAMMAL LOCALSTORAGE TILL IDB (Första gången man öppnar denna version)
+  if (!idbEntries) {
+      const oldEntries = localStorage.getItem('bullet_journal_complete_v94');
+      entries = oldEntries ? JSON.parse(oldEntries) : {};
+      await idbSet('entries', entries);
+  } else { entries = idbEntries; }
+
+  if (!idbBooks) {
+      const oldBooks = localStorage.getItem('bullet_journal_books_v94');
+      books = oldBooks ? JSON.parse(oldBooks) : [];
+      await idbSet('books', books);
+  } else { books = idbBooks; }
+
+  if (!idbIntentions) {
+      const oldInt = localStorage.getItem('bullet_journal_intentions_v94');
+      monthIntentions = oldInt ? JSON.parse(oldInt) : {};
+      await idbSet('intentions', monthIntentions);
+  } else { monthIntentions = idbIntentions; }
+
+  // Rendera allt när datan är laddad
+  updateQuickWaterDisplay();
+  populateMonthFilter();
+  refreshActiveView();
+}
+
 // --- INITIALISERING ---
 window.addEventListener('DOMContentLoaded', () => {
   const savedPin = localStorage.getItem(PIN_KEY);
@@ -965,9 +972,9 @@ window.addEventListener('DOMContentLoaded', () => {
   shuffleAffirmation();
   shuffleActivitySuggestion();
   initWeatherIP();
-  updateQuickWaterDisplay();
-  populateMonthFilter();
-  renderCalendar();
+  
+  // Startar asynkron laddning av gigabyte-minnet
+  loadData();
 });
 
 // --- FÄRGSLIDER & TEMA ---
@@ -1034,9 +1041,7 @@ function applyCustomColor(r, g, b, showMsg = true) {
   const hex = rgbToHex(r, g, b);
   
   const picker = document.getElementById('rgbColorPicker');
-  const input = document.getElementById('rgbTextInput');
   if(picker) picker.value = hex;
-  if(input) input.value = `${r}, ${g}, ${b}`;
   
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
   const textColor = luminance > 128 ? '#1a1a1a' : '#ffffff';
@@ -1058,13 +1063,6 @@ function applyCustomColorFromPicker(hex, showMsg = true) {
   applyCustomColor(rgb[0], rgb[1], rgb[2], showMsg);
 }
 
-function applyCustomColorFromText(text) {
-  const parts = text.replace(/[^0-9,]/g, '').split(',');
-  if(parts.length >= 3) {
-    applyCustomColor(parts[0], parts[1], parts[2]);
-  }
-}
-
 // --- SETTINGS MODAL ---
 function editTitle() {
   const newTitle = prompt('Vad vill du kalla din journal?', journalTitle);
@@ -1084,22 +1082,22 @@ function savePinCode() { const p = document.getElementById('newPinInput').value;
 function removePinCode() { localStorage.removeItem(PIN_KEY); showToast('PIN borttagen.'); closeSettings(); }
 
 function exportBackup() {
-  const data = { entries, books, journalTitle, monthIntentions, version: '94.0' };
+  const data = { entries, books, journalTitle, monthIntentions, version: '95.0' };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `journal_backup_${formatKey(new Date())}.json`; a.click();
   showToast('Backup exporterad! 📦');
 }
 
-function importBackup(e) {
+async function importBackup(e) {
   const file = e.target.files[0]; if(!file) return;
   const reader = new FileReader();
-  reader.onload = function(evt) {
+  reader.onload = async function(evt) {
     try {
       const data = JSON.parse(evt.target.result);
-      if(data.entries) { entries = data.entries; localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
-      if(data.books) { books = data.books; localStorage.setItem(BOOKS_KEY, JSON.stringify(books)); }
+      if(data.entries) { entries = data.entries; await idbSet('entries', entries); }
+      if(data.books) { books = data.books; await idbSet('books', books); }
       if(data.journalTitle) { journalTitle = data.journalTitle; localStorage.setItem(TITLE_KEY, journalTitle); document.getElementById('pageTitle').textContent = journalTitle; }
-      if(data.monthIntentions) { monthIntentions = data.monthIntentions; localStorage.setItem(INTENTION_KEY, JSON.stringify(monthIntentions)); }
+      if(data.monthIntentions) { monthIntentions = data.monthIntentions; await idbSet('intentions', monthIntentions); }
       refreshActiveView(); showToast('Backup importerad! ✨'); closeSettings();
     } catch(err) { alert('Kunde inte läsa filen. Kontrollera formatet.'); }
   };
@@ -1173,14 +1171,14 @@ function runBreathSequence() {
 }
 
 // Månadens intention
-function editMonthIntention() {
+async function editMonthIntention() {
   const y = currentDate.getFullYear(), m = String(currentDate.getMonth() + 1).padStart(2, '0');
   const monthKey = `${y}-${m}`;
   const currentInt = monthIntentions[monthKey] || '';
   const newInt = prompt(`Sätt ett fokusord för denna månad:`, currentInt);
   if(newInt !== null) {
     monthIntentions[monthKey] = newInt.trim();
-    localStorage.setItem(INTENTION_KEY, JSON.stringify(monthIntentions));
+    await idbSet('intentions', monthIntentions);
     updateMonthIntentionDisplay();
     showToast('Intention sparad! 🌸');
   }
@@ -1200,15 +1198,15 @@ function updateQuickWaterDisplay() {
   const el = document.getElementById('quickWaterDisplay');
   if(el) el.textContent = `💧 Dagens vatten: ${glasses} glas`;
 }
-function quickAddWater() {
+async function quickAddWater() {
   const todayKey = formatKey(new Date());
   if(!entries[todayKey]) entries[todayKey] = { water: 1 }; else entries[todayKey].water = (entries[todayKey].water || 0) + 1;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); updateQuickWaterDisplay(); showToast('Ett glas vatten tillagt! 💧');
+  await idbSet('entries', entries); updateQuickWaterDisplay(); showToast('Ett glas vatten tillagt! 💧');
 }
-function quickRemoveWater() {
+async function quickRemoveWater() {
   const todayKey = formatKey(new Date());
   if(entries[todayKey] && (entries[todayKey].water || 0) > 0) {
-    entries[todayKey].water -= 1; localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); updateQuickWaterDisplay(); showToast('Ett glas vatten borttaget.');
+    entries[todayKey].water -= 1; await idbSet('entries', entries); updateQuickWaterDisplay(); showToast('Ett glas vatten borttaget.');
   }
 }
 
@@ -1344,7 +1342,7 @@ function openModal(date) {
 
 function closeModal(e) { if(!e || e.target.id === 'modalOverlay' || e.target.classList.contains('icon-btn')) { document.getElementById('modalOverlay').classList.remove('active'); const k = formatKey(new Date()); if(activeView==='calendar' && entries[k] && entries[k].mood) applyMoodTheme(entries[k].mood); else if(activeView==='calendar') clearMoodTheme(); } }
 
-function saveEntry() {
+async function saveEntry() {
   const note = document.getElementById('noteInput').value.trim(), gratitude = document.getElementById('gratitudeInput').value.trim(), song = document.getElementById('songInput').value.trim(), dream = document.getElementById('dreamInput').value.trim(), food = document.getElementById('foodInput').value.trim();
   const sleep = parseFloat(document.getElementById('sleepInput').value), water = parseInt(document.getElementById('waterInput').value), energy = parseInt(document.getElementById('energyInput').value), stress = parseInt(document.getElementById('stressInput').value);
   
@@ -1357,10 +1355,10 @@ function saveEntry() {
   } else {
     entries[selectedDateKey] = { note, gratitude, song, dream, food, mood: selectedMood, sleep, water, energy, stress, tags, habits, photos: currentPhotos, audio: currentAudio, weather: selectedWeather, cycle: selectedCycle, todos: currentTodos };
   }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); closeModal(); refreshActiveView(); showToast('Dagen sparad! 🌿');
+  await idbSet('entries', entries); closeModal(); refreshActiveView(); showToast('Dagen sparad! 🌿');
 }
 
-function deleteEntry() { delete entries[selectedDateKey]; localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); closeModal(); refreshActiveView(); showToast('Raderat'); }
+async function deleteEntry() { delete entries[selectedDateKey]; await idbSet('entries', entries); closeModal(); refreshActiveView(); showToast('Raderat'); }
 
 // --- SCRAPBOOK ---
 function debouncedSearch(q, m) { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => renderScrapbook(q, m), 200); }
@@ -1415,18 +1413,15 @@ function openBookModal() {
 
 function closeBookModal(e) { if(!e || e.target.id === 'bookModalOverlay' || e.target.classList.contains('icon-btn')) { const el = document.getElementById('bookModalOverlay'); if(el) el.classList.remove('active'); } }
 
-// FIX: Använd de snygga .selected klasserna för att markera aktiv status!
 function setBookStatus(st) { 
   currentBookStatus = st; 
-  document.querySelectorAll('.book-status-btn').forEach(btn => {
-    if(btn.dataset.status === st) {
-      btn.classList.add('selected');
-      btn.setAttribute('aria-pressed', 'true');
-    } else {
-      btn.classList.remove('selected');
-      btn.setAttribute('aria-pressed', 'false');
-    }
-  });
+  const tBtn = document.getElementById('statusToReadBtn');
+  const rBtn = document.getElementById('statusReadingBtn');
+  const dBtn = document.getElementById('statusReadBtn');
+  
+  if(tBtn) { tBtn.style.background = st==='toread'?'var(--accent)':'var(--bg-input)'; tBtn.style.color = st==='toread'?'var(--accent-text)':'var(--ink)'; tBtn.setAttribute('aria-pressed', st === 'toread' ? 'true' : 'false'); }
+  if(rBtn) { rBtn.style.background = st==='reading'?'var(--accent)':'var(--bg-input)'; rBtn.style.color = st==='reading'?'var(--accent-text)':'var(--ink)'; rBtn.setAttribute('aria-pressed', st === 'reading' ? 'true' : 'false'); }
+  if(dBtn) { dBtn.style.background = st==='read'?'var(--accent)':'var(--bg-input)'; dBtn.style.color = st==='read'?'var(--accent-text)':'var(--ink)'; dBtn.setAttribute('aria-pressed', st === 'read' ? 'true' : 'false'); }
 }
 
 function setBookRating(val) {
@@ -1445,20 +1440,20 @@ function setBookRating(val) {
   });
 }
 
-function saveBook() { 
+async function saveBook() { 
   const t = document.getElementById('bookTitleInput').value.trim();
   const a = document.getElementById('bookAuthorInput').value.trim();
   const rev = document.getElementById('bookReviewInput').value.trim();
   if(!t) return alert('Ange titel.'); 
   
   books.push({id:Date.now(), title:t, author:a, status:currentBookStatus, rating:currentBookRating, review:rev}); 
-  localStorage.setItem(BOOKS_KEY, JSON.stringify(books)); 
+  await idbSet('books', books); 
   closeBookModal(); 
   renderBooks(); 
   showToast('Bok sparad!'); 
 }
 
-function deleteBook(id) { books = books.filter(b=>b.id!==id); localStorage.setItem(BOOKS_KEY,JSON.stringify(books)); renderBooks(); showToast('Bok raderad'); }
+async function deleteBook(id) { books = books.filter(b=>b.id!==id); await idbSet('books', books); renderBooks(); showToast('Bok raderad'); }
 
 function renderBooks() {
   const c = document.getElementById('booksContainer'); if(!c) return;
