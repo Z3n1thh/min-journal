@@ -102,15 +102,14 @@ button { font-family: inherit; color: inherit; transition: background-color 0.2s
 .dashboard-table td { padding: 10px 14px; font-size: 0.9rem; border-bottom: 1px solid var(--border); transition: border-color 0.3s ease; }
 .dashboard-table tr:last-child td { border-bottom: none; }
 
-.affirmation-card{background:linear-gradient(135deg,var(--bg-card),var(--bg-input)); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px; text-align:center; font-size:0.95rem; color:var(--ink-secondary); font-weight:500; cursor:pointer; flex-shrink:0; transition: border-color 0.2s, color 0.3s ease;}
-.affirmation-card:hover{border-color:var(--accent); color:var(--ink);}
+.affirmation-card{background:linear-gradient(135deg,var(--bg-card),var(--bg-input)); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px 14px; text-align:center; font-size:0.95rem; color:var(--ink); font-weight:500; cursor:pointer; flex-shrink:0; transition: border-color 0.2s, color 0.3s ease; display:flex; flex-direction:column; gap:4px; align-items:center;}
+.affirmation-card:hover{border-color:var(--accent);}
 
 .activity-banner { background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: var(--radius-sm); padding: 12px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background-color 0.3s ease, border-color 0.3s ease; flex-shrink: 0; }
 .activity-banner:hover { background: var(--bg-input); }
 
 .memory-card{background:linear-gradient(135deg,var(--bg-card),var(--bg-input)); border:1px dashed var(--accent); border-radius:var(--radius-sm); padding:10px 14px; display:flex; flex-direction:column; gap:4px; cursor:pointer; transition: background-color 0.3s ease;}
 
-/* FIX FÖR SCRAPBOOK SÖK/FILTER SÅ DET INTE BLIR HORISONTELL SCROLL */
 .search-container{display:flex; gap:8px; flex-shrink:0; flex-wrap: wrap;}
 .search-input{flex:1 1 200px; padding:12px 16px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-card); color:var(--ink); font-size:16px; outline:none; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.1s ease;}
 .search-input:focus{border-color:var(--accent);}
@@ -132,7 +131,7 @@ button { font-family: inherit; color: inherit; transition: background-color 0.2s
 .gallery-item img{width:100%; height:100%; object-fit:cover;}
 
 /* Modal System */
-.modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.85); display:none; align-items:center; justify-content:center; z-index:1000; padding:14px;}
+.modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.85); display:none; align-items:center; justify-content:center; z-index:1000; padding:14px; scroll-behavior: smooth;}
 .modal-overlay.active{display:flex;}
 .modal-sheet{background:var(--bg-elevated); border-radius:var(--radius-lg); padding:24px; width:100%; max-width:480px; max-height:85vh; overflow-y:auto; border:1px solid var(--border); -webkit-overflow-scrolling:touch; transition: background-color 0.3s ease, border-color 0.3s ease;}
 .section-label{font-size:0.85rem; font-weight:700; color:var(--ink-secondary); text-transform:uppercase; margin:20px 0 8px 0; letter-spacing:1px; transition: color 0.3s ease;}
@@ -184,12 +183,12 @@ input, textarea, select { font-size: 16px !important; }
 .btn{flex:1; padding:14px; border-radius:var(--radius-sm); border:none; color:var(--ink); font-weight:700; cursor:pointer; text-align:center; font-size:0.95rem; transition: background-color 0.2s, color 0.2s;}
 .btn-primary{background:var(--accent) !important; color:var(--accent-text) !important;}
 
-/* Tema Slider: 3 fasta steg */
+/* Tema Slider */
 .theme-slider-container { display:flex; gap:12px; align-items:center; margin-bottom:20px; background:var(--bg-input); padding:10px 16px; border-radius:var(--radius-sm); border:1px solid var(--border); transition: background-color 0.3s ease; }
 .theme-slider { -webkit-appearance:none; height:8px; background:linear-gradient(to right, #131018, #3a324c, #fcfbfa); border-radius:10px; cursor:pointer; flex:1; outline:none; }
 .theme-slider::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--accent); border:2px solid #fff; box-shadow:0 0 5px rgba(0,0,0,0.5); }
 
-/* Egen Färg Input (RGB Layout) */
+/* Egen Färg Input */
 .custom-hex-box { display:flex; align-items:center; gap:8px; background:var(--bg-input); padding:6px 12px; border-radius:var(--radius-sm); border:1px solid var(--border); transition: background-color 0.3s ease, border-color 0.3s ease; }
 .rgb-circle-picker { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); border: 2px solid var(--border); box-shadow: 0 0 8px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: transform 0.2s; }
 .rgb-circle-picker:hover { transform: scale(1.1); border-color: #fff; }
@@ -332,7 +331,7 @@ input, textarea, select { font-size: 16px !important; }
     <span id="weatherEmoji" style="font-size: 1.4rem;" aria-hidden="true">🌤️</span>
     <div class="weather-info">
       <div class="weather-temp" id="weatherTemp">Laddar...</div>
-      <div class="weather-desc" id="weatherDesc">Klicka för stad 📍</div>
+      <div class="weather-desc" id="weatherDesc">Klicka för att ställa in stad 📍</div>
     </div>
   </div>
 
@@ -360,7 +359,7 @@ input, textarea, select { font-size: 16px !important; }
       </tr>
     </table>
 
-    <div class="affirmation-card" id="affirmationCard" onclick="shuffleAffirmation()" tabindex="0" aria-live="polite" aria-label="Dagens peppcitat. Klicka för ett nytt">Laddar citat...</div>
+    <div class="affirmation-card" id="affirmationCard" onclick="shuffleInspiration()" tabindex="0" aria-live="polite" aria-label="Dagens peppcitat. Klicka för ett nytt">Laddar citat...</div>
     
     <!-- AKTIVITETSTIPS -->
     <div class="activity-banner" onclick="shuffleActivitySuggestion()" tabindex="0" aria-label="Aktivitetstips. Klicka för ett nytt">
@@ -430,13 +429,13 @@ input, textarea, select { font-size: 16px !important; }
       </div>
 
       <div class="stat-card" style="border-left: 4px solid var(--accent);">
-        <h3 style="font-size:0.8rem; color:var(--ink-secondary); text-transform:uppercase; margin-bottom:4px; font-weight:700;">🔥 Vanesviter (Streaks)</h3>
-        <p id="streakText" style="font-size:0.9rem; line-height:1.5;">Laddar...</p>
+        <h3 style="font-size:0.8rem; color:var(--ink-secondary); text-transform:uppercase; margin-bottom:10px; font-weight:700;">🔥 Vanesviter (Streaks)</h3>
+        <div id="streakText" style="font-size:0.9rem; line-height:1.5;">Laddar...</div>
       </div>
 
       <div class="stat-card" style="border-left: 4px solid var(--accent);">
-        <h3 style="font-size:0.8rem; color:var(--ink-secondary); text-transform:uppercase; margin-bottom:4px; font-weight:700;">🏷️ Aktivitetsstatistik</h3>
-        <p id="tagStatsText" style="font-size:0.9rem; line-height:1.5;">Laddar...</p>
+        <h3 style="font-size:0.8rem; color:var(--ink-secondary); text-transform:uppercase; margin-bottom:10px; font-weight:700;">🏷️ Aktivitetsstatistik</h3>
+        <div id="tagStatsText" style="font-size:0.9rem; line-height:1.5;">Laddar...</div>
       </div>
 
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px;">
@@ -602,7 +601,6 @@ input, textarea, select { font-size: 16px !important; }
     </div>
     <textarea class="note-area" id="noteInput" placeholder="Skriv fritt om din dag..." aria-label="Dagbokstext"></textarea>
 
-    <!-- NY DESIGN PÅ DAGENS MÅL -->
     <div class="section-label">Dagens Mål</div>
     <div class="todo-input-wrapper">
       <input type="text" id="todoInput" placeholder="Skriv en liten uppgift..." aria-label="Lägg till ett nytt mål">
@@ -711,12 +709,12 @@ window.addEventListener('beforeinstallprompt', (e) => {
   }
 });
 
-// --- DATABAS & INDEXEDDB (v96) LÖSER 5MB GRÄNSEN ---
-const TITLE_KEY = 'bullet_journal_title_v96';
-const PIN_KEY = 'bullet_journal_pin_v96';
-const ACCENT_KEY = 'bullet_journal_accent_v96';
-const THEME_KEY = 'bullet_journal_theme_v96';
-const LOCATION_KEY = 'bullet_journal_location_v96';
+// --- DATABAS & INDEXEDDB (v98) ---
+const TITLE_KEY = 'bullet_journal_title_v98';
+const PIN_KEY = 'bullet_journal_pin_v98';
+const ACCENT_KEY = 'bullet_journal_accent_v98';
+const THEME_KEY = 'bullet_journal_theme_v98';
+const LOCATION_KEY = 'bullet_journal_location_v98';
 
 let entries = {};
 let books = [];
@@ -751,7 +749,6 @@ async function idbSet(key, val) {
     });
 }
 
-// Beder mobilen att spara data permanent
 if (navigator.storage && navigator.storage.persist) {
   navigator.storage.persist().then(persistent => {
     if(persistent) console.log("Lagring säkrad mot automatisk rensning.");
@@ -792,13 +789,22 @@ try { customTags = JSON.parse(localStorage.getItem('bullet_journal_custom_tags')
 const emojiList = ['✨','💧','🏃‍♀️','🧘‍♀️','🎸','🎨','🎮','📖','🍳','🧹','🚗','✈️','🐾','🪴','☕','🎧','💻','✍️','🛍️','🚲'];
 
 // --- DATA OBJEKT ---
-const affirmations = [
+const inspirations = [
   "Du gör så gott du kan, och det räcker mer än väl. 🌱",
   "Varje liten paus är ett steg mot ny energi. ☕",
   "Dina känslor är giltiga, ta hand om dig själv idag. 💙",
   "Du behöver inte ha allt klart på en gång. Ta ett andetag. ✨",
   "Var stolt över de små framstegen du gör varje dag. 🌸",
-  "Idag är en ny dag fylld av nya möjligheter. ☀️"
+  "Idag är en ny dag fylld av nya möjligheter. ☀️",
+  "Allt stort börjar med ett litet steg. Du är på väg! 🚀",
+  "Ge dig själv tillåtelse att vila. Du behöver inte alltid prestera. 🛋️",
+  "Du är starkare än du tror, och modigare än du känner dig. 💪",
+  "Kom ihåg att andas. Ett djupt andetag kan förändra hela din stund. 🌬️",
+  "Sätt gränser som får dig att må bra. Ditt välmående är viktigt. 🛡️",
+  "Jämför inte din insida med andras utsida. Du är unik! 🌟",
+  "Släpp taget om det du inte kan kontrollera. 🍂",
+  "Du förtjänar samma kärlek som du ger till andra. ❤️",
+  "Det är okej att ha en dålig dag. Imorgon är ett nytt blad. 📖"
 ];
 
 const dailyPrompts = [
@@ -831,15 +837,6 @@ const activitySuggestions = [
   "Kolla igenom gamla, härliga foton och minns tillbaka.",
   "Vädra hemmet och släpp in lite frisk luft.",
   "Ge dig själv en hand- eller fotmassage med en god kräm."
-];
-
-const selfCareTips = [
-  "Drick ett stort glas kallt vatten och ta tre djupa andetag. 💧",
-  "Gör en kopp av din favorithryck och sitt i tystnad i 5 minuter. ☕",
-  "Sätt på en låt du älskar och dansa eller sträck på dig ordentligt! 🎶",
-  "Gå ut och känn frisk luft på ansiktet i 10 minuter. ☀️",
-  "Skicka ett snällt meddelande till någon du tycker om. 💌",
-  "Lägg dig ner, blunda och släpp spänningen i axlar och käke. 🌸"
 ];
 
 const secretNotes = {
@@ -954,7 +951,6 @@ function saveCustomChip() {
     currentSel.push(val);
     renderTagChips(currentSel);
   }
-  
   closeCustomModal();
 }
 
@@ -964,33 +960,27 @@ async function loadData() {
   let idbBooks = await idbGet('books');
   let idbIntentions = await idbGet('intentions');
 
-  // MIGRERING FRÅN GAMMAL LOCALSTORAGE TILL IDB (Första gången man öppnar denna version)
   if (!idbEntries) {
-      const oldEntries = localStorage.getItem('bullet_journal_complete_v95') || localStorage.getItem('bullet_journal_complete_v94');
+      const oldEntries = localStorage.getItem('bullet_journal_complete_v97') || localStorage.getItem('bullet_journal_complete_v96');
       entries = oldEntries ? JSON.parse(oldEntries) : {};
       await idbSet('entries', entries);
   } else { entries = idbEntries; }
 
   if (!idbBooks) {
-      const oldBooks = localStorage.getItem('bullet_journal_books_v95') || localStorage.getItem('bullet_journal_books_v94');
+      const oldBooks = localStorage.getItem('bullet_journal_books_v97') || localStorage.getItem('bullet_journal_books_v96');
       books = oldBooks ? JSON.parse(oldBooks) : [];
       await idbSet('books', books);
   } else { books = idbBooks; }
 
   if (!idbIntentions) {
-      const oldInt = localStorage.getItem('bullet_journal_intentions_v95') || localStorage.getItem('bullet_journal_intentions_v94');
+      const oldInt = localStorage.getItem('bullet_journal_intentions_v97') || localStorage.getItem('bullet_journal_intentions_v96');
       monthIntentions = oldInt ? JSON.parse(oldInt) : {};
       await idbSet('intentions', monthIntentions);
   } else { monthIntentions = idbIntentions; }
-
-  // Rendera allt när datan är laddad
-  updateQuickWaterDisplay();
-  populateMonthFilter();
-  refreshActiveView();
 }
 
-// --- INITIALISERING ---
-window.addEventListener('DOMContentLoaded', () => {
+// --- INITIALISERING MED ASYNC LÅS FÖR TRACKERS ---
+window.addEventListener('DOMContentLoaded', async () => {
   const savedPin = localStorage.getItem(PIN_KEY);
   if (savedPin) {
     const pinEl = document.getElementById('pinOverlay');
@@ -1006,14 +996,18 @@ window.addEventListener('DOMContentLoaded', () => {
   
   if(customAccent) applyCustomColorFromPicker(customAccent, false);
 
+  // VÄNTA PÅ ATT DATABASEN LADDAS INNAN VI RITAR UPP NÅGOT! (Löser problemet med tom statistik)
+  await loadData();
+
   renderHabitChips();
   renderTagChips();
-  shuffleAffirmation();
+  setDailyInspiration();
   shuffleActivitySuggestion();
-  initWeatherIP();
+  initWeather();
   
-  // Startar asynkron laddning av gigabyte-minnet
-  loadData();
+  updateQuickWaterDisplay();
+  populateMonthFilter();
+  refreshActiveView();
 });
 
 // --- FÄRGSLIDER & TEMA ---
@@ -1121,7 +1115,7 @@ function savePinCode() { const p = document.getElementById('newPinInput').value;
 function removePinCode() { localStorage.removeItem(PIN_KEY); showToast('PIN borttagen.'); closeSettings(); }
 
 async function exportBackup() {
-  const data = { entries, books, journalTitle, monthIntentions, version: '96.0' };
+  const data = { entries, books, journalTitle, monthIntentions, version: '98.0' };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `journal_backup_${formatKey(new Date())}.json`; a.click();
   showToast('Backup exporterad! 📦');
@@ -1143,22 +1137,23 @@ async function importBackup(e) {
   reader.readAsText(file);
 }
 
-// --- VERKTYG & EXTRAS ---
-function shuffleAffirmation() {
-  const idx = Math.floor(Math.random() * affirmations.length);
+// --- INSPIRATION & TIPS ---
+function setDailyInspiration() {
+  const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
   const el = document.getElementById('affirmationCard');
-  if(el) el.textContent = affirmations[idx];
+  if(el) el.innerHTML = `<div style="font-size:0.75rem; color:var(--accent); text-transform:uppercase; font-weight:bold; letter-spacing:1px; margin-bottom:4px;">✨ Dagens Inspiration</div>${inspirations[dayOfYear % inspirations.length]}`;
+}
+
+function shuffleInspiration() {
+  const idx = Math.floor(Math.random() * inspirations.length);
+  const el = document.getElementById('affirmationCard');
+  if(el) el.innerHTML = `<div style="font-size:0.75rem; color:var(--accent); text-transform:uppercase; font-weight:bold; letter-spacing:1px; margin-bottom:4px;">✨ Ny Inspiration</div>${inspirations[idx]}`;
 }
 
 function shuffleActivitySuggestion() {
   const idx = Math.floor(Math.random() * activitySuggestions.length);
   const el = document.getElementById('activitySuggestionText');
   if(el) el.textContent = activitySuggestions[idx];
-}
-
-function showSelfCareTip() {
-  const randomTip = selfCareTips[Math.floor(Math.random() * selfCareTips.length)];
-  alert("💖 Dagens måbra-tips:\n\n" + randomTip);
 }
 
 function openSecretNotes() { const el = document.getElementById('secretNotesModal'); if(el) el.classList.add('active'); }
@@ -1168,7 +1163,7 @@ function showSecretNote(type) {
   if(el) { el.style.display = 'block'; el.innerHTML = `<b>Meddelande till dig:</b><br><br>${secretNotes[type]}`; }
 }
 
-// ANDNINGSÖVNING (ORB)
+// ANDNINGSÖVNING
 function openBreathing() { 
   const el = document.getElementById('breathOverlay'); 
   if(el) el.classList.add('active'); 
@@ -1249,25 +1244,82 @@ async function quickRemoveWater() {
   }
 }
 
-// Väder
-function initWeatherIP() {
+// --- RIKTIG GPS PLATSTJÄNST ---
+function initWeather() {
   const savedLoc = JSON.parse(localStorage.getItem(LOCATION_KEY));
-  if (savedLoc) fetchWeatherCoords(savedLoc.lat, savedLoc.lon, savedLoc.name);
-  else fetch('https://ipapi.co/json/').then(r => r.json()).then(d => { if(d.latitude) { const l = {lat:d.latitude, lon:d.longitude, name:d.city||'Plats'}; localStorage.setItem(LOCATION_KEY, JSON.stringify(l)); fetchWeatherCoords(l.lat, l.lon, l.name); } else fetchWeatherCoords(57.7089, 11.9746, 'Göteborg'); }).catch(()=>fetchWeatherCoords(57.7089, 11.9746, 'Göteborg'));
+  if (savedLoc && savedLoc.lat && savedLoc.lon) {
+    fetchWeatherCoords(savedLoc.lat, savedLoc.lon, savedLoc.name);
+  } else {
+    document.getElementById('weatherTemp').textContent = "-°C";
+    document.getElementById('weatherDesc').textContent = "Klicka för att ställa in stad 📍";
+  }
 }
+
 function promptChangeLocation() {
-  const city = prompt("Vilken stad befinner du dig i?"); if(!city || !city.trim()) return;
-  fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city.trim())}&count=1&language=sv`).then(r => r.json()).then(d => {
-    if(d.results && d.results.length > 0) { const loc = d.results[0]; localStorage.setItem(LOCATION_KEY, JSON.stringify({lat:loc.latitude, lon:loc.longitude, name:loc.name})); fetchWeatherCoords(loc.latitude, loc.longitude, loc.name); showToast(`Plats ändrad till ${loc.name}!`); } else alert("Hittade inte platsen.");
-  }).catch(() => alert("Kunde inte söka."));
+  if (navigator.geolocation) {
+    document.getElementById('weatherDesc').textContent = "Söker din plats...";
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        // Slår upp stad baserat på exakta GPS-koordinater
+        fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=sv`)
+          .then(r => r.json())
+          .then(d => {
+            const city = d.city || d.locality || "Din plats";
+            localStorage.setItem(LOCATION_KEY, JSON.stringify({lat, lon, name: city}));
+            fetchWeatherCoords(lat, lon, city);
+            showToast(`Hittade plats: ${city} 📍`);
+          })
+          .catch(() => manualLocationPrompt());
+      },
+      (err) => {
+        manualLocationPrompt();
+      },
+      { timeout: 5000 }
+    );
+  } else {
+    manualLocationPrompt();
+  }
 }
+
+function manualLocationPrompt() {
+  const city = prompt("Ange din stad för att visa väder (t.ex. Stockholm):"); 
+  if(!city || !city.trim()) { initWeather(); return; }
+  
+  document.getElementById('weatherDesc').textContent = "Söker...";
+  fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city.trim())}&count=1&language=sv`)
+    .then(r => r.json())
+    .then(d => {
+      if(d.results && d.results.length > 0) { 
+        const loc = d.results[0]; 
+        localStorage.setItem(LOCATION_KEY, JSON.stringify({lat:loc.latitude, lon:loc.longitude, name:loc.name})); 
+        fetchWeatherCoords(loc.latitude, loc.longitude, loc.name); 
+        showToast(`Vädret uppdaterat för ${loc.name}! 🌤️`); 
+      } else { 
+        alert("Hittade inte staden. Kolla stavningen."); 
+        initWeather();
+      }
+    }).catch(() => { alert("Nätverksfel."); initWeather(); });
+}
+
 function fetchWeatherCoords(lat, lon, locName) {
-  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`).then(r => r.json()).then(d => {
-    if(d.current_weather) { const w = weatherMap[d.current_weather.weathercode] || {emoji:'🌡️', desc:'Väder'};
-      const e = document.getElementById('weatherEmoji'), t = document.getElementById('weatherTemp'), desc = document.getElementById('weatherDesc');
-      if(e) e.textContent = w.emoji; if(t) t.textContent = `${Math.round(d.current_weather.temperature)}°C`; if(desc) desc.textContent = `${w.desc} · ${locName}`;
-    }
-  }).catch(()=>{});
+  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`)
+    .then(r => r.json())
+    .then(d => {
+      if(d.current_weather) { 
+        const w = weatherMap[d.current_weather.weathercode] || {emoji:'🌡️', desc:'Väder'};
+        const e = document.getElementById('weatherEmoji');
+        const t = document.getElementById('weatherTemp');
+        const desc = document.getElementById('weatherDesc');
+        if(e) e.textContent = w.emoji; 
+        if(t) t.textContent = `${Math.round(d.current_weather.temperature)}°C`; 
+        if(desc) desc.textContent = `${w.desc} · ${locName}`;
+      }
+    })
+    .catch(()=>{
+         document.getElementById('weatherDesc').textContent = "Kunde inte hämta vädret ❌";
+    });
 }
 
 // --- KALENDER ---
@@ -1376,7 +1428,12 @@ function openModal(date) {
 
   renderTodoList(); renderPhotoPreviews(); renderAudioPlayer();
   if(selectedMood) applyMoodTheme(selectedMood); else clearMoodTheme();
-  document.getElementById('modalOverlay').classList.add('active');
+  
+  // Öppna rutan och SNAPPA TILL TOPPEN
+  const modalOverlay = document.getElementById('modalOverlay');
+  modalOverlay.classList.add('active');
+  const sheet = modalOverlay.querySelector('.modal-sheet');
+  if(sheet) sheet.scrollTop = 0;
 }
 
 function closeModal(e) { if(!e || e.target.id === 'modalOverlay' || e.target.classList.contains('icon-btn')) { document.getElementById('modalOverlay').classList.remove('active'); const k = formatKey(new Date()); if(activeView==='calendar' && entries[k] && entries[k].mood) applyMoodTheme(entries[k].mood); else if(activeView==='calendar') clearMoodTheme(); } }
@@ -1428,7 +1485,7 @@ function renderScrapbook(q='', mF='') {
         ${e.dream ? `<div style="font-size:0.9rem;color:#c084fc;">☁️ ${e.dream}</div>`:''}
         ${e.food ? `<div style="font-size:0.9rem;color:#fbbf24;">🍲 ${e.food}</div>`:''}
         ${e.gratitude ? `<div style="font-size:0.95rem;color:var(--accent);font-weight:600;">✨ ${e.gratitude}</div>`:''}
-        ${e.note ? `<div style="font-size:0.95rem;line-height:1.6;color:var(--ink);">${e.note}</div>`:''}
+        ${e.note ? `<div style="font-size:0.95rem;line-height:1.6;color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;">${e.note}</div>`:''}
         ${tHtml}${pHtml}
         ${e.audio ? `<audio controls src="${e.audio}" style="width:100%;height:34px;margin-top:6px;" onclick="event.stopPropagation()"></audio>`:''}
         <div style="font-size:0.8rem;color:var(--ink-secondary);display:flex;gap:10px;flex-wrap:wrap;font-weight:500;margin-top:4px;">
@@ -1565,22 +1622,50 @@ function drawGratitudeJar() {
   const rk = gk[Math.floor(Math.random() * gk.length)];
   el.innerHTML = `✨ <em>"${entries[rk].gratitude}"</em> <span style="display:block;font-size:0.75rem;color:var(--ink-secondary);margin-top:2px;">(${rk})</span>`;
 }
+
 function calculateStreaks() {
   const hN = [...defaultHabits, ...customHabits]; 
   let res = "";
+  
   hN.forEach(h => {
-    let s=0, d=new Date();
+    let s = 0;
+    let d = new Date();
+    let todayStr = formatKey(d);
+    let checkedToday = false;
+    
     while(true) {
-      const k=formatKey(d); if(entries[k]&&entries[k].habits&&entries[k].habits.includes(h)) { s++; d.setDate(d.getDate()-1); }
-      else { if(s===0 && k===formatKey(new Date())) { d.setDate(d.getDate()-1); continue; } break; }
-    } res += `• ${h}: <b style="color:var(--accent);">${s} dagar</b><br>`;
-  }); return res;
+      const k = formatKey(d);
+      if(entries[k] && entries[k].habits && entries[k].habits.includes(h)) {
+          s++;
+          d.setDate(d.getDate() - 1);
+          checkedToday = true;
+      } else {
+          // Om vanan inte är ifylld IDAG än, bryt inte streaken! Kolla igår istället.
+          if(!checkedToday && k === todayStr) {
+              d.setDate(d.getDate() - 1);
+              checkedToday = true;
+              continue; 
+          }
+          break;
+      }
+    }
+    
+    if(s > 0) {
+      res += `<div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding:6px 0;"><span>${h}</span><b style="color:var(--accent);">${s} dgr 🔥</b></div>`;
+    }
+  });
+  
+  return res || "<div style='color:var(--ink-secondary);font-size:0.85rem;'>Inga aktiva streaks just nu. Kom igång idag! 🌱</div>";
 }
+
 function calculateTagStats() {
   let c={}; Object.values(entries).forEach(e => { if(e.tags) e.tags.forEach(t => c[t]=(c[t]||0)+1); });
-  let s = Object.entries(c).sort((a,b)=>b[1]-a[1]); if(!s.length) return "Inga aktiviteter än.";
-  return s.slice(0,5).map(i=>`• ${i[0]}: <b style="color:var(--accent);">${i[1]} ggr</b>`).join('<br>');
+  let s = Object.entries(c).sort((a,b)=>b[1]-a[1]); 
+  if(!s.length) return "<div style='color:var(--ink-secondary);font-size:0.85rem;'>Inga aktiviteter loggade än.</div>";
+  
+  return s.slice(0,5).map(i=>`<div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding:6px 0;"><span>${i[0]}</span><b style="color:var(--accent);">${i[1]} ggr</b></div>`).join('');
 }
+
 function renderStats() {
   const k = Object.keys(entries); 
   const statTotal = document.getElementById('statTotal'); if(statTotal) statTotal.textContent = k.length;
@@ -1594,7 +1679,7 @@ function renderStats() {
   const tagEl = document.getElementById('tagStatsText'); if(tagEl) tagEl.innerHTML = calculateTagStats();
   
   const sumEl = document.getElementById('monthlySummaryText');
-  if(sumEl) { if(cM.length>0) sumEl.innerHTML=`Denna månad har du loggat <b>${cM.length} dagar</b>. Snittsömn <b>${sC>0?(tS/sC).toFixed(1):'-'}h</b>. Bra jobbat! 🌱`; else sumEl.innerHTML=`Inga inlägg denna månad än.`; }
+  if(sumEl) { if(cM.length>0) sumEl.innerHTML=`Denna månad har du loggat <b>${cM.length} dagar</b>. Snittsömn <b>${sC>0?(tS/sC).toFixed(1):'-'}h</b>. Bra jobbat! 🌱`; else sumEl.innerHTML=`<span style="color:var(--ink-secondary);">Inga inlägg denna månad än.</span>`; }
   
   const max = Math.max(...Object.values(mC), 1), mCont = document.getElementById('moodTrackerStats');
   if(mCont) mCont.innerHTML = Object.keys(mC).map(m=>{ const c=moodConfig[m], n=mC[m], p=(n/max)*100; return `<div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:4px;font-weight:500;"><span>${c.emoji} ${c.name}</span><span style="font-weight:bold;color:${c.color};">${n} dgr</span></div><div class="mood-stat-bar-bg"><div class="mood-stat-bar-fill" style="width:${p}%;background:${c.color};"></div></div>`;}).join('');
